@@ -34,7 +34,7 @@
                     <span>忘记密码</span>
                 </div>
                 <!-- 登录按钮 -->
-                <button @click='login' class='login-box-form-button'>登录</button>
+                <button @click.prevent='login' class='login-box-form-button'>登录</button>
             </el-form>
         </div>
     </div>
