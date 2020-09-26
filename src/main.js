@@ -13,11 +13,13 @@ import {
   getToken,
   loginOut
 } from '@/util'
-
+const WHITE_LIST = ['/login'];
 
 router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     window.sessionStorage.setItem('token', 'Basic Y2xpZW50OjEyMzQ1Ng==')
+    next();
+    return
     // return next()
   }
   // 判断登录是否有效
@@ -27,15 +29,20 @@ router.beforeEach((to, from, next) => {
       next();
     } else {
       let sessionUserInfo = JSON.parse(sessionStorage.getItem('userInfo'));
-      // 判断登录数据是否存在
-
+      // 判断登录数据是否存在 
       if (sessionUserInfo.userInfoId) {
         store.commit('SAVE_USER_INFO', sessionUserInfo);
-        store.dispatch('userMenus').then(() => {
-          next(store.state.userMenuTree[0])
-        })
+        // 判断用户菜单是否存在
+        if (store.state.userMenuTree.length) {
+          next()
+        } else {
+          //没有用户菜单就获取菜单
+          store.dispatch('userMenus').then(() => {
+            next(store.state.userMenuTree[0])
+          })
+        }
+        //没有登陆的数据就退出登陆
       } else {
-
         loginOut();
       }
     }
@@ -64,8 +71,7 @@ router.beforeEach((to, from, next) => {
 
 
 router.afterEach((to, from) => {
-  // 判断当前页面是否存在
-
+  // 判断当前页面是否存在 
   if (!to.name) {
     router.push('/login');
   }
