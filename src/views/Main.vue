@@ -13,7 +13,7 @@
           <!-- 头部右侧栏 -->
           <div class="main-container-header-user-msg">
             <img :src="userMsg.userLogo" alt />
-            <span>{{userName}}</span>
+            <span>{{ userName }}</span>
           </div>
           <div class="main-container-header-user-back" @click="logout">
             <img src="@imgs/home/back.svg" alt />
@@ -22,20 +22,35 @@
       </el-header>
       <!-- 主体区域 -->
       <el-container class="main-container-body">
-        <!-- 侧边栏 --> 
+        <!-- 侧边栏 -->
         <div class="main-container-body-aside">
-          <div class="main-container-body-aside-menu" text-color="#fff" active-text-color="#fff">
-            <el-menu :default-active="currentRoute" class="main-container-body-aside-menu" router>
-              <template v-for="(item ) in userMenuTree">
-                <el-submenu :index="item.menuUrl" :key="item.menuId" v-if="item.list.length>0">
-                  <template slot="title">{{item.menuName }}</template>
+          <div
+            class="main-container-body-aside-menu"
+            text-color="#fff"
+            active-text-color="#fff"
+          >
+            <el-menu
+              :default-active="currentRoute"
+              class="main-container-body-aside-menu"
+              router
+            >
+              <template v-for="item in userMenuTree">
+                <el-submenu
+                  :index="item.menuUrl"
+                  :key="item.menuId"
+                  v-if="item.list.length > 0"
+                >
+                  <template slot="title">{{ item.menuName }}</template>
                   <el-menu-item
                     :index="itemSon.menuUrl"
-                    v-for="(itemSon) in item.list"
+                    v-for="itemSon in item.list"
                     :key="itemSon.menuId"
-                  >{{itemSon.menuName}}</el-menu-item>
+                    >{{ itemSon.menuName }}</el-menu-item
+                  >
                 </el-submenu>
-                <el-menu-item :index="item.menuUrl" :key="item.menuId" v-else>{{item.menuName }}</el-menu-item>
+                <el-menu-item :index="item.menuUrl" :key="item.menuId" v-else>{{
+                  item.menuName
+                }}</el-menu-item>
               </template>
             </el-menu>
           </div>
@@ -50,7 +65,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 export default {
   name: "Main",
   data() {
@@ -58,7 +73,7 @@ export default {
       currentRoute: "",
       userMsg: {
         username: "",
-        userLogo: require("@imgs/home/user-logo.png")
+        userLogo: require("@imgs/home/user-logo.png"),
       },
       // 一级侧边栏动态激活下标
       AsideActiveIndex: 0,
@@ -66,35 +81,37 @@ export default {
       AsideSubActiveIndex: 0,
       AsideListContent: [],
       currentComponent: "MyDebt",
-      userName: "用户名或身份"
+      userName: "用户名或身份",
     };
   },
-  
-  created() {
-    // 初始化数据
-    this.initData();
+  computed: {
+    ...mapState(["userInfo", "userMenuTree"]),
   },
   watch: {
     $route(to) {
       this.currentRoute = to.meta.leftMenu;
-    }
+    },
   },
+  created() {
+    // 初始化数据
+    this.initData();
+  },
+
   mounted() {
     this.currentRoute = this.$route.meta.leftMenu;
+    console.log(this.userMenuTree);
   },
-  computed: {
-    ...mapState(["userInfo", "userMenuTree"])
-  },
+
   methods: {
     initData() {
       // 初始化头像和用户信息
       const username = localStorage.getItem("username");
       this.userName = username;
-    }
+    },
   },
   created() {
     this.initData();
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>

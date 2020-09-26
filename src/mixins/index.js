@@ -1,12 +1,15 @@
 // 全局设置
+import { loginOut } from '@/util';
 export default {
   methods: {
     linkToPath(path, data) {
       this.$router.push({ path: path, query: data })
     },
-    
-    openImgToLink(src){
-      if(src){
+    logout() {
+      loginOut()
+    },
+    openImgToLink(src) {
+      if (src) {
         window.open(src)
       }
     },
