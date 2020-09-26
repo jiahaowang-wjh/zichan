@@ -1,0 +1,17 @@
+/* 改变主题色变量 */
+$--color-primary: #616789;
+
+// $--menu-item-fill: $--color-primary !default;
+// $--menu-item-hover-fill: $--color-primary !default;
+// $--button-default-border: none!default;
+// $--button-primary-color: $--color-primary !default;
+// $--input-border: 1px solid #7d7d7d !default;
+// $--datepicker-border-color: 1px solid #7d7d7d !default;
+// $--input-border-radius: 0 !default;
+// $--table-header-background: #45B5F3 !default;
+// $--table-header-color: #fff !default;
+// $--table-border-color: #7d7d7d !default;
+/* 改变 icon 字体路径变量，必需 */
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+// $--card-padding:  0 ;
+@import "~element-ui/packages/theme-chalk/src/index";

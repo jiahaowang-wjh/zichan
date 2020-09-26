@@ -18,7 +18,196 @@ const routes = [
     {
         path: '/main',
         name: 'Main',
-        component: Main
+        component: Main,
+        children:[
+            {
+              path: '/MyDebt',
+              name: 'MyDebt',
+              component: () => import('@/views/MyDebt'),
+              meta: {
+                leftMenu: '/MyDebt'
+              }
+            },
+             {
+               path: '/PayDetail',
+               name: 'PayDetail',
+               component: () => import('@/views/PayDetail'),
+               meta: {
+                 leftMenu: '/PayDetail'
+               }
+             },
+              {
+              path: '/Password',
+              name: 'Password',
+              component: () => import('@/views/Password'),
+              meta: {
+                leftMenu: '/Password'
+              }
+            },
+             {
+              path: '/Assess',
+              name: 'Assess',
+              component: () => import('@/views/MyDebt/Assess'),
+              meta: {
+                leftMenu: '/Assess'
+              }
+            },
+            //  {
+            //    path: '/DebtMessage',
+            //    name: 'DebtMessage',
+            //    component: () => import('@/views/DebtMessage'),
+            //    meta: {
+            //      leftMenu: '/DebtMessage'
+            //    }
+            //  },
+            //   {
+            //     path: '/FinanceMessage',
+            //     name: 'FinanceMessage',
+            //     component: () => import('@/views/FinanceMessage'),
+            //     meta: {
+            //       leftMenu: '/FinanceMessage'
+            //     }
+            //   },
+               {
+                 path: '/Assignment',
+                 name: 'Assignment',
+                 component: () => import('@/views/MyDebt/Assignment'),
+                 meta: {
+                   leftMenu: '/Assignment'
+                 }
+               },
+                {
+              path: '/ConfirmAssignment',
+              name: 'ConfirmAssignment',
+              component: () => import('@/views/MyDebt/ConfirmAssignment'),
+              meta: {
+                leftMenu: '/ConfirmAssignment'
+              }
+            },
+
+             {
+               path: '/Notification',
+               name: 'Notification',
+               component: () => import('@/views/MyDebt/Notification'),
+               meta: {
+                 leftMenu: '/Notification'
+               }
+             }, {
+              path: '/CollectionLetters',
+              name: 'CollectionLetters',
+              component: () => import('@/views/MyDebt/CollectionLetters'),
+              meta: {
+                leftMenu: '/CollectionLetters'
+              }
+            },
+
+             {
+               path: '/Compromise',
+               name: 'Compromise',
+               component: () => import('@/views/MyDebt/Compromise'),
+               meta: {
+                 leftMenu: '/Compromise'
+               }
+             },
+              {
+                path: '/Guarantee',
+                name: 'Guarantee',
+                component: () => import('@/views/MyDebt/Guarantee'),
+                meta: {
+                  leftMenu: '/Guarantee'
+                }
+              },
+               {
+                 path: '/ReportInfo',
+                 name: 'ReportInfo',
+                 component: () => import('@/views/myapproval/ReportInfo'),
+                 meta: {
+                   leftMenu: '/ReportInfo'
+                 }
+               },
+                 {
+                 path: '/DebtConfirm',
+                 name: 'DebtConfirm',
+                 component: () => import('@/views/MyDebt/DebtConfirm'),
+                 meta: {
+                   leftMenu: '/DebtConfirm'
+                 }
+               }, {
+                 path: '/ReportInfo',
+                 name: 'ReportInfo',
+                 component: () => import('@/views/myapproval/ReportInfo'),
+                 meta: {
+                   leftMenu: '/ReportInfo'
+                 }
+               },
+               {
+                 path: '/CivilMedia',
+                 name: 'CivilMedia',
+                 component: () => import('@/views/myapproval/CivilMedia'),
+                 meta: {
+                   leftMenu: '/CivilMedia'
+                 }
+               },
+               {
+                 path: '/UnlockApply',
+                 name: 'UnlockApply',
+                 component: () => import('@/views/myapproval/UnlockApply'),
+                 meta: {
+                   leftMenu: '/UnlockApply'
+                 }
+               }, {
+                 path: '/PaymentVoucher',
+                 name: 'PaymentVoucher',
+                 component: () => import('@/views/myapproval/PaymentVoucher'),
+                 meta: {
+                   leftMenu: '/PaymentVoucher'
+                 }
+               }, {
+                 path: '/AssetInformation',
+                 name: 'AssetInformation',
+                 component: () => import('@/views/myapproval/AssetInformation'),
+                 meta: {
+                   leftMenu: '/AssetInformation'
+                 }
+               }, {
+                 path: '/PropertyAssessment',
+                 name: 'PropertyAssessment',
+                 component: () => import('@/views/myapproval/PropertyAssessment'),
+                 meta: {
+                   leftMenu: '/PropertyAssessment'
+                 }
+               }, {
+                 path: '/AssessApprove',
+                 name: 'AssessApprove',
+                 component: () => import('@/views/myapproval/AssessApprove'),
+                 meta: {
+                   leftMenu: '/AssessApprove'
+                 }
+               }, {
+                 path: '/AssetInformationApprove',
+                 name: 'AssetInformationApprove',
+                 component: () => import('@/views/myapproval/AssetInformationApprove'),
+                 meta: {
+                   leftMenu: '/AssetInformationApprove'
+                 }
+               }, {
+                 path: '/Payment',
+                 name: 'Payment',
+                 component: () => import('@/views/myapproval/Payment'),
+                 meta: {
+                   leftMenu: '/Payment'
+                 }
+               }, {
+                 path: '/PaymentApprove',
+                 name: 'PaymentApprove',
+                 component: () => import('@/views/myapproval/PaymentApprove'),
+                 meta: {
+                   leftMenu: '/PaymentApprove'
+                 }
+               }, 
+               
+             
+        ]
     }
 ]
 
@@ -26,22 +215,6 @@ const router = new VueRouter({
     routes
 })
 
-router.beforeEach((to, from, next) => {
-    // to 表示将要访问的路径
-    // from 表示由哪个路径跳转而来
-    // next 表示一个函数,表示放行, next('/login'),表示强制跳转的路径
-    // 1. 如果访问登录页面 直接放行
-    if (to.path === '/login') {
-        window.sessionStorage.setItem('token', 'Basic Y2xpZW50OjEyMzQ1Ng==')
-        return next()
-    } else {
-        // 2. 获取token
-        const tokenStr = window.sessionStorage.getItem('token')
-        // 3. 如果没有token,跳转到登录页面
-        if (!tokenStr) return next('/login')
-        // 4. 如果存在则放行
-    }
-    next()
-})
+
 
 export default router

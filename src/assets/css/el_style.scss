@@ -1,0 +1,338 @@
+.el-message__icon {
+  font-size: 30px;
+}
+
+.el-menu {
+  background-color: none;
+  background-image: linear-gradient(to bottom, #5c6283, #191a38);
+  width: px2rem(55);
+  height: 100%;
+
+  .el-menu {
+    background-color: none;
+    background-image: linear-gradient(to bottom, #5c6283, #191a38);
+  }
+
+  //子项
+  .el-menu-item {
+    font-size: 0.10667rem;
+    color: #fff;
+  }
+
+  .el-menu-item:hover {
+    background-color: #b3bcf2;
+  }
+
+  .el-menu-item.is-active {
+    background-color: #b3bcf2;
+    color: #fff;
+  }
+
+  //子菜单
+  .el-submenu__title {
+    font-size: 0.10667rem;
+    color: #fff;
+  }
+
+  .el-submenu__title:hover {
+    background-color: #b3bcf2;
+  }
+}
+
+// 下载表单
+.el-table .cell {
+  height: px2rem(8) !important;
+  line-height: px2rem(8) !important;
+
+  button {
+    border: none;
+    padding: px2rem(0.6) px2rem(2);
+    margin: 0 px2rem(3);
+    border-radius: px2rem(1);
+    color: #fff;
+    font-size: px2rem(3.5);
+  }
+
+  button:nth-child(1) {
+    background-color: #ad94e2;
+  }
+
+  button:nth-child(2) {
+    background-color: #b3bcf2;
+  }
+}
+.el-table__row {
+  width: 45vw !important;
+  display: flex !important;
+  justify-content: space-around !important;
+
+  :nth-child(1) {
+    flex: 3;
+  }
+
+  :nth-child(2) {
+    flex: 8;
+  }
+
+  :nth-child(3) {
+    flex: 3;
+  }
+
+  :nth-child(4) {
+    flex: 6;
+  }
+}
+
+.el-dialog {
+  width: 48vw !important;
+}
+
+thead>tr {
+  width: 45vw !important;
+  display: flex !important;
+  justify-content: space-around !important;
+  font-size: px2rem(3.2);
+
+  :nth-child(1) {
+    flex: 3;
+  }
+
+  :nth-child(2) {
+    flex: 8;
+  }
+
+  :nth-child(3) {
+    flex: 3;
+  }
+
+  :nth-child(4) {
+    flex: 6;
+  }
+}
+.el-input--prefix .el-input__inner {
+  padding-left: px2rem(9) !important;
+}
+
+.el-input--suffix .el-input__inner {
+  padding-right: px2rem(4) !important;
+}
+
+thead>tr>th>div {
+  background-color: #616789;
+  height: px2rem(6);
+  line-height: px2rem(6);
+  color: #fff;
+  font-size: px2rem(3.4);
+}
+
+
+
+.el-form-item {
+  // margin-bottom: 0 !important;
+  // margin-left: px2rem(2);
+  // margin-right: 0;
+  // height: 100% !important;
+  // vertical-align: middle !important;
+}
+
+.el-select-dropdown__item.selected {
+  color: #616789 !important;
+}
+
+// 修改placeholder字体
+input::-webkit-input-placeholder {
+  /* placeholder颜色  */
+  color: #aab2bd;
+  /* placeholder字体大小  */
+  font-size: px2rem(3);
+}
+
+.el-form-item__error {
+  line-height: inherit !important;
+  font-size: px2rem(3.5) !important;
+  top: px2rem(4.5) !important;
+  height: px2rem(4.5) !important;
+  margin-top: px2rem(1);
+}
+
+.el-select-dropdown__item span {
+  font-size: px2rem(3.5) !important;
+}
+
+// .el-form-item__label {
+// float: left;
+// line-height: px2rem(8) !important;
+// padding: 0;
+// }
+
+.el-form-item__content {
+  min-height: px2rem(8) !important;
+  line-height: px2rem(8) !important;
+  display: flex;
+}
+.el-input__icon {
+  display: flex;
+  align-items: center;
+  width: px2rem(4);
+  height: px2rem(7) !important;
+  line-height: px2rem(7) !important;
+  margin-left: px2rem(0.5);
+}
+
+// .el-form-item__content {
+//   min-height: px2rem(8) !important;
+//   line-height: px2rem(8) !important;
+//   display: flex;
+// }
+
+// 弹出框样式
+.el-message-box__header {
+  background-color: #616789;
+
+  span {
+    color: #ffffff;
+  }
+}
+
+// 弹出窗样式修改
+.el-dialog__body {
+  width: 100%;
+  box-sizing: border-box;
+  padding: px2rem(1) px2rem(4) !important;
+}
+
+.el-dialog__headerbtn {
+  top: px2rem(4) !important;
+  right: px2rem(4) !important;
+}
+
+.el-dialog__title {
+  font-size: px2rem(4) !important;
+}
+
+.el-dialog__header {
+  height: px2rem(10);
+  padding: 0 !important;
+  line-height: px2rem(10);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #616789;
+
+  span {
+    color: #fff;
+    margin-left: px2rem(4);
+  }
+}
+
+.el-dialog__headerbtn .el-dialog__close {
+  color: #fff !important;
+  width: px2rem(4);
+  height: px2rem(4);
+  margin-right: px2rem(2);
+  margin-bottom: px2rem(2);
+}
+
+.el-table td,
+.el-table th {
+  padding: px2rem(1) 0 !important;
+  text-align: center !important;
+}
+
+.el-table-column {
+  :nth-child(1) {
+    border: none;
+  }
+
+  :nth-child(2) {
+    border: none;
+  }
+}
+
+.el-table th>.cell {
+  border-left: px2rem(0.1) solid #fff;
+  border-right: px2rem(0.1) solid #fff;
+}
+
+.el-button {
+  font-size: px2rem(4) !important;
+}
+
+// 手风琴样式修改
+.el-collapse-item__header.is-active {
+  border-bottom: 1px solid #dfe0e7;
+}
+
+.el-collapse-item__header {
+  font-size: px2rem(5) !important;
+  font-weight: 600 !important;
+}
+
+.el-collapse-item__content {
+  padding-top: px2rem(2);
+  background-color: #fff !important;
+  font-size: px2rem(3.2) !important;
+}
+
+// pagination
+.el-pagination {
+  font-weight: 600 !important;
+}
+
+.el-pagination.is-background .el-pager li:not(.disabled).active {
+  background-color: #616789 !important;
+}
+
+.el-pagination__jump {
+  height: px2rem(8) !important;
+  line-height: px2rem(8) !important;
+}
+
+.el-pagination.is-background .btn-next,
+.el-pagination.is-background .btn-prev,
+.el-pagination.is-background .el-pager li {
+  height: px2rem(8) !important;
+  line-height: px2rem(8) !important;
+}
+
+.el-input.is-disabled .el-input__inner {
+  color: #000000 !important;
+}
+
+// 全局的tabs 标签页
+// #999999;
+.public-tabs {
+  .el-tabs__item {
+    color: #999999;
+    font-size: 18px;
+  }
+
+  .el-tabs__item.is-active {
+    color: #616789;
+  }
+}
+
+// 公共的布局样式
+.pub-row-box {
+  .el-col {
+    display: flex;
+
+    .col-label {
+      flex-shrink: 0;
+      padding-right: 15px;
+      padding-top: px2rem(1);
+    }
+
+    .el-form-item {
+      flex: 1;
+    }
+
+    .el-input {
+      width: 100%;
+      height: px2rem(8);
+    }
+  }
+
+  // 示例
+  //  <el-form :label-width="0"class="pub-row-box"><el-row><el-col :span="8"><span class="col-label">债权总金额：</span><el-form-item><el-input type="text"v-model="SubmitData.amountTotal"/></el-form-item></el-col></el-row></el-form>
+}

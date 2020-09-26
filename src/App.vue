@@ -12,6 +12,7 @@ export default {
 </script>
 <style lang="scss">
 @import '@css/style.scss';
+@import '@css/el_style.scss';
 .app {
     position: relative;
     width: 100%;
