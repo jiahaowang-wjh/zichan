@@ -17,10 +17,11 @@
         :model="loginForm"
         :rules="loginFormRules"
         ref="loginFormRef"
+         @submit.prevent="()=>false"
+        @submit.native.prevent
       >
         <!-- 用户名 -->
-        <el-form-item prop="username"  @submit.prevent="()=>false"
-        @submit.native.prevent>
+        <el-form-item prop="username" >
           <el-input v-model="loginForm.username" placeholder="请输入用户账号"></el-input>
         </el-form-item>
         <!-- 密码 -->
