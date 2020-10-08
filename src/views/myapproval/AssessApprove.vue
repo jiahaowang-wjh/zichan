@@ -9,12 +9,12 @@
         <div class='assess-content'>
             <div class='assess-content-progress-map'>
                 <div class='assess-content-progress-map-highlight'>
-                    <span>{{}}</span>
+                    <span></span>
                     1.资产评估
                 </div>
                 <div>
                     <span></span>
-                    2.债权转让协议
+                    2.债权转让协议 
                 </div>
                 <div>
                     <span></span>
@@ -22,23 +22,23 @@
                 </div>
                 <div>
                     <span></span>
-                    4.债权转让通知书
+                    4.债权确认书
                 </div>
                 <div>
                     <span></span>
-                    5.委托代理销售合同
+                    5.委托寄卖合同
                 </div>
                 <div>
                     <span></span>
-                    6.催款函
+                    6.委托代理销售合同
                 </div>
                 <div>
                     <span></span>
-                    7.和解协议
+                    7.催款函
                 </div>
                 <div>
                     <span></span>
-                    8.银行保函协议
+                    8.和解协议
                 </div>
             </div>
             <!-- 背景横线 -->
@@ -84,7 +84,7 @@
                 <div class='assess-content-main-row2'>
                     <span class='assess-content-main-row2-title'>本次置换资产凭证</span>
                     <span class='assess-content-main-row2-form'>
-                        <input type="text" :disabled='true'>
+                        <input type="text" :disabled='true' v-model='AssessMsg.credentialsText'>
                     </span>
                 </div>
                 <div class='assess-content-main-row2-update'>
@@ -141,17 +141,17 @@ export default {
             if (!this.CommitApproveData.checkReason) return this.$message.error('请先填写审核原因')
             this.CommitApproveData.status = '2'
             this.UpdateCheckStatus()
-            this.$emit('onChangeFragment', 'ReportInfo')
+            this.$router.push({path: '/PropertyAssessment'})
         },
         PassCheck () {
             this.CommitApproveData.status = '3'
             this.UpdateCheckStatus()
-            this.$emit('onChangeFragment', 'ReportInfo')
+            this.$router.push({path: '/PropertyAssessment'})
         },
         // 调用报备状态更改接口
         async UpdateCheckStatus () {
             const formData = new FormData()
-            this.CommitApproveData.propertId = window.sessionStorage.getItem('propertId')
+            this.CommitApproveData.propertId = this.$route.query.propertId
             const CommitApproveData = this.CommitApproveData
             for (const key in CommitApproveData) {
                 formData.append(key, CommitApproveData[key])
@@ -174,9 +174,9 @@ export default {
         // 获取相对人Id及通过相对人获取资产评估页面初始信息
         // 通过相对人ID获取评估页面信息
         async GetRelativeId () {
-            const relativePerId = window.sessionStorage.getItem('relativePerId')
             const formData = new FormData()
-            formData.append('relativePerId', relativePerId)
+            formData.append('relativePerId', this.$route.query.relativePerId)
+            formData.append('propertId', this.$route.query.propertId)
             const { data: result } = await this.$http({
                 method: 'post',
                 url: '/api/api/busAssessmentController/initialize',
@@ -187,9 +187,8 @@ export default {
             })
             this.assessData = result.data
             // 通过资产ID查询评估ID
-            const propertId = window.sessionStorage.getItem('propertId')
             const AssetInformationFormData = new FormData()
-            AssetInformationFormData.append('propertId', propertId)
+            AssetInformationFormData.append('propertId', this.$route.query.propertId)
             const { data: AssetInformationResult } = await this.$http({
                 method: 'post',
                 url: '/api/api/busAssessmentController/selectByPropertId',
@@ -198,8 +197,8 @@ export default {
                     'Content-Type': 'multipart/form-data'
                 }
             })
-            console.log(AssetInformationResult)
             this.AssessMsg = AssetInformationResult.data
+            console.log(this.AssessMsg)
             const length = this.AssessMsg.credentials.split(',').length
             for (let i = 0; i < length; i++) {
                 this.UpdateImgsSrcList[i] = this.AssessMsg.credentials.split(',')[i]

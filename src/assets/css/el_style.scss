@@ -12,8 +12,9 @@
     background-color: none;
     background-image: linear-gradient(to bottom, #5c6283, #191a38);
   }
-
-  //子项
+  .el-input.is-disabled .el-input__inner {
+      background-color: red;
+  }//子项
   .el-menu-item {
     font-size: 0.10667rem;
     color: #fff;
@@ -293,10 +294,6 @@ input::-webkit-input-placeholder {
 .el-pagination.is-background .el-pager li {
   height: px2rem(8) !important;
   line-height: px2rem(8) !important;
-}
-
-.el-input.is-disabled .el-input__inner {
-  color: #000000 !important;
 }
 
 // 全局的tabs 标签页

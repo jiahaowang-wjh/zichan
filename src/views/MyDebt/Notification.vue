@@ -8,38 +8,51 @@
         </div>
         <div class='notification-content'>
             <div class='notification-content-progress-map'>
-                <div class='promise-content-progress-map-finished'>
+                <div class='notification-content-progress-map-finished'>
                     <span></span>
                     1.资产评估
                 </div>
-                <div class='promise-content-progress-map-finished'>
+                <div class='notification-content-progress-map-finished'>
                     <span></span>
                     2.债权转让协议
                 </div>
-                <div class='promise-content-progress-map-highlight'>
+                <div class='notification-content-progress-map-finished'>
                     <span></span>
                     3.债权转让确认书
                 </div>
-                <div>
+                <div class='notification-content-progress-map-finished'>
                     <span></span>
                     4.债权确认书
                 </div>
-                <div>
+                <div class='notification-content-progress-map-highlight'>
                     <span></span>
                     5.债权转让通知书
                 </div>
-                <div>
-                    <span></span>
-                    6.委托代理销售合同
-                </div>
-                <div>
-                    <span></span>
-                    7.催款函
-                </div>
-                <div>
-                    <span></span>
-                    8.和解协议
-                </div>
+                <!-- 如果解债类型为depttype = 1,否则则显示下面的template  -->
+                <template v-if="debtType === '1'">
+                    <div>
+                        <span></span>
+                        6.催款函
+                    </div>
+                    <div>
+                        <span></span>
+                        7.和解协议
+                    </div>
+                </template>
+                <template v-else>
+                    <div>
+                        <span></span>
+                        {{debtType === '2' ? '6.委托代理销售合同' : '6.委托线上代理销售合同'}}
+                    </div>
+                    <div>
+                        <span></span>
+                        7.催款函
+                    </div>
+                    <div>
+                        <span></span>
+                        8.和解协议
+                    </div>
+                </template>
             </div>
             <!-- 背景横线 -->
             <div class='notification-content-crossing'></div>
@@ -47,8 +60,11 @@
                 <div class='notification-content-main-title'>
                     债权转让通知书
                 </div>
-                <div><input type="text" :value='InitMsg.personName'> </div>
-                <div>本公司/本人(债权人)享有的对你方(债务人)如下债权,现已转让给资产公司名字。自你方收到本通知函之日起,本公司/本人与你方债权偾务关系消灭,由你方向前述新债权人履行债务清偿义务。</div>
+                编号： <el-input :disabled='true' style='width: 300px' :value='InitMsg.noticeNo'></el-input>：<br/>
+                <div class='notification-content-main-input'>
+                    <el-input :disabled='true' :value='InitMsg.personName'></el-input>：
+                </div>
+                <div>我方享有的对你方如下债权，现已转让给深圳市金隆盛投资管理有限公司。自你方收到本通知之日起，你我之间不再具有债权债务关系，请你方向前述新债权人履行债务清偿义务。</div>
                 <div class='notification-content-main-table'>
                     <div class='notification-content-main-table-title'>
                         <span>债权人姓名/名称</span>
@@ -61,15 +77,25 @@
                         <span>{{InitMsg.debtName}}</span>
                         <span>{{InitMsg.personName}}</span>
                         <span>{{InitMsg.idCard}}</span>
-                        <span>{{InitMsg.personReason}}</span>
+                        <span>{{InitMsg.personReason ? InitMsg.personReason : '无'}}</span>
                         <span>{{InitMsg.amountThis}}</span>
                     </div>
                 </div>
-                <div class='notification-content-main-title'>特此通知！</div>
-                <div class='notification-content-main-message'>债权人盖章: <button>上传电子章</button></div>
-                <div class='notification-content-main-message'>债权人签字: <input type="text" v-model='SubmitData.obligorSign'></div>
-                <div class='notification-content-main-message'>身份证/统一社会信用代码 <input type="text" v-model='SubmitData.cardId'></div>
-                <div class='notification-content-main-message'><span>时间</span><input type="text" v-model='SubmitData.obligorDate'></div>
+                <div>特此通知！</div>
+                <div>
+                    <el-row :gutter="24">
+                        <el-col :span="6">
+                            <span class='col-label'>通知人：</span>
+                            <el-input type="text" :value='InitMsg.debtName' :disabled='true'></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="24">
+                        <el-col :span="6">
+                            <span class='col-label'>时间：</span>
+                            <el-input type="text" :value='InitMsg.contractTime' :disabled='true'></el-input>
+                        </el-col>
+                    </el-row>
+                </div>
                 <div class='notification-content-main-button'>
                     <button @click='Submit'>提交</button>
                 </div>
@@ -84,21 +110,18 @@ export default {
         return {
             InitMsg: {},
             SubmitData: {
-                propertId: '',
-                noticeNo: '',
-                obligorSeal: '111',
-                cardId: '',
-                obligorSign: '',
-                obligorDate: ''
-            }
+                assignmentAgreementNo: '',
+                propertId: this.$route.query.propertId,
+                contractTime: ''
+            },
+            debtType: ''
         }
     },
     methods: {
         async InitData () {
-            const relativePerId = window.sessionStorage.getItem('relativePerId')
-            console.log(relativePerId)
             const formData = new FormData()
-            formData.append('relativePerId', relativePerId)
+            formData.append('relativePerId', this.$route.query.relativePerId)
+            formData.append('propertId', this.$route.query.propertId)
             const { data: result } = await this.$http({
                 method: 'post',
                 url: '/api/api/busAssignmentNoticeController/initialize',
@@ -109,10 +132,11 @@ export default {
             })
             this.InitMsg = result.data
             console.log(this.InitMsg)
+            this.debtType = this.$route.query.debtType
         },
         async Submit () {
-            this.SubmitData.propertId = window.sessionStorage.getItem('propertId')
-            this.SubmitData.noticeNo = this.InitMsg.assignmentAgreementNo
+            this.SubmitData.noticeNo = this.InitMsg.noticeNo
+            this.SubmitData.contractTime = this.InitMsg.contractTime
             const formData = new FormData()
             for (const key in this.SubmitData) {
                 formData.append(key, this.SubmitData[key])
@@ -126,9 +150,10 @@ export default {
                 }
             })
             if (result.resultCode !== '200') return this.$message.error(result.resultMessage)
+            
             // 更新资产信息自身阶段
             const PropertFormData = new FormData()
-            PropertFormData.append('propertId', window.sessionStorage.getItem('propertId'))
+            PropertFormData.append('propertId', this.$route.query.propertId)
             PropertFormData.append('stage', '5')
             const { data: PropertStatusResult } = await this.$http({
                 method: 'post',
@@ -139,7 +164,12 @@ export default {
                 }
             })
             if (PropertStatusResult.resultCode !== '200') return this.$message.error(PropertStatusResult.resultMessage)
-            this.$emit('onChangeFragment', 'SalesAgreement')
+            this.$message.success('提交成功')
+            if (this.$route.query.debtType === '1') {
+                this.$router.push({path: '/CollectionLetters', query: {propertId: this.$route.query.propertId, relativePerId: this.$route.query.relativePerId, debtType: this.debtType}})
+            } else {
+                this.$router.push({path: '/SalesAgreement', query: {propertId: this.$route.query.propertId, relativePerId: this.$route.query.relativePerId, debtType: this.debtType}})
+            }
         }
     },
     created () {
@@ -150,6 +180,33 @@ export default {
 </script>
 <style lang='scss' scoped>
 @import '@css/style.scss';
+.el-row {
+  .el-col {
+    display: flex;
+    padding: 0 20px;
+    margin: 5px 0;
+    line-height: 40px;
+    input {
+        width: 100%;
+    }
+    .col-label {
+      flex-shrink: 0;
+      margin-right: 10px;
+    }
+    /deep/.el-form-item {
+      width: 100%;
+      .el-select {
+        width: 100%;
+      }
+      .el-input {
+        width: 100%;
+      }
+      .el-date-editor {
+        width: 100%;
+      }
+    }
+  }
+}
 .notification {
     display: flex;
     flex-direction: column;
@@ -176,6 +233,7 @@ export default {
         margin: 0 px2rem(4) px2rem(4) px2rem(4);
         padding: px2rem(4);
         border-radius: px2rem(2);
+        line-height: 45px;
         position: relative;
         &-progress-map {
             display: flex;
@@ -225,10 +283,20 @@ export default {
             font-size: px2rem(3.5);
             &-title {
                 height: px2rem(14);
-                line-height: px2rem(14);
                 font-size: px2rem(4);
                 text-align: center;
                 font-weight: 600;
+            }
+            &-input {
+                .el-input {
+                    background-color: #fff;
+                    border: 1px solid #DFE0E7;
+                    border-radius: px2rem(1);
+                    margin:0 px2rem(1);
+                    background-color: #F2F6F9;
+                    height: px2rem(4.5);
+                    width: 200px;
+                }
             }
             input {
                 background-color: #fff;
@@ -239,31 +307,11 @@ export default {
                 height: px2rem(4.5);
                 width: px2rem(30);
             }
-            &-text {
-                line-height: px2rem(7);
-            }
             &-button {
                 text-align: center;
                 margin: px2rem(6) 0;
                 button {
                     width: px2rem(50);
-                    height: px2rem(8);
-                    border: none;
-                    background-color: #616789;
-                    color: #fff;
-                    border-radius: px2rem(1);
-                }
-            }
-            &-message {
-                margin: px2rem(2) 0;
-                input {
-                    width: px2rem(50);
-                    margin-left: px2rem(3);
-                    height: px2rem(6);
-                    background-color: #fff;
-                }
-                button {
-                    width: px2rem(30);
                     height: px2rem(8);
                     border: none;
                     background-color: #616789;
@@ -283,13 +331,12 @@ export default {
                     span {
                         display: inline-block;
                         width: px2rem(40);
-                        height: px2rem(12);
-                        line-height: px2rem(6);
                         border: 1px solid #E8EAEC;
                         text-align: center;
                         font-weight: 600;
                         font-size: px2rem(3.5);
                         padding: 0 px2rem(2);
+                        vertical-align: middle;
                     }
                 }
                 &-content {
@@ -299,11 +346,10 @@ export default {
                     span {
                         display: inline-block;
                         width: px2rem(40);
-                        height: px2rem(18);
-                        line-height: px2rem(6);
+                        height: 100px;
+                        line-height: 100px;
                         border: 1px solid #E8EAEC;
                         text-align: center;
-                        line-height: px2rem(18);
                         font-size: px2rem(3.5);
                         padding: 0 px2rem(2);
                     }

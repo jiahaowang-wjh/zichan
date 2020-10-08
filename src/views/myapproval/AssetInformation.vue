@@ -46,8 +46,8 @@
                             {{item.status === '0'?('资产信息未录入'):item.status === '1'?('资产评估未审核'):item.status === '2'? ('资产评估审核未通过') : item.status === '3'?('资产评估审核通过') : item.status === '4'?('资产信息未审核') : item.status === '5'?('资产信息审核未通过') : item.status === '6'?('资产信息审核通过,开始缴费') : item.status === '7'?('财务信息未审核') : item.status === '8'?('财务信息审核未通过') : item.status === '9'?('财务信息审核通过') : '' }}
                         </span>
                         <span>
-                            <button @click='CheckAssessment(index)' v-show="item.stage === '8' && item.status === '4'">审核</button>
-                            <button @click='GoPayment(index)' v-show="item.status === '6'">缴费</button>
+                            <button @click='CheckAssessment(index, item)' v-show="item.stage === '8' && item.status === '4'">审核</button>
+                            <button @click='GoPayment(index, item)' v-show="item.status === '6'">缴费</button>
                         </span>
                     </div>
                 </div>
@@ -88,7 +88,17 @@ export default {
             // 支付信息信息列表数据源
             PaymentMsg: [],
             // 确定选用正常模板还是多选模板
-            isNormal: false
+            isNormal: false,
+            SearchForm: {
+                pageNum: '1',
+                pageSize: '10',
+                beginDate: '',
+                endDate: '',
+                debtName: '',
+                status: '',
+                companyType: window.sessionStorage.getItem('companyType'),
+                comId: window.sessionStorage.getItem('companyId')
+            }
         }
     },
     methods: {
@@ -100,14 +110,8 @@ export default {
         // 页面初始化
         async InitData () {
             const formData = new FormData()
-            const DataList = {
-                pageSize: '10',
-                pageNum: '1',
-                companyType: ''
-            }
-            DataList.companyType = window.sessionStorage.getItem('companyType')
-            for (const key in DataList) {
-                formData.append(key, DataList[key])
+            for (const key in this.SearchForm) {
+                formData.append(key, this.SearchForm[key])
             }
             const { data: result } = await this.$http({
                 method: 'post',
@@ -130,16 +134,12 @@ export default {
             })
             item.isSelect = true
         },
-        CheckAssessment (index) {
-            window.sessionStorage.setItem('propertId', this.PaymentMsg[index].propertId)
-            window.sessionStorage.setItem('relativePerId', this.PaymentMsg[index].relativePerId)
-            this.$emit('onChangeFragment', 'AssetInformationApprove')
+        CheckAssessment (index, item) {
+            this.$router.push({path: '/AssetInformationApprove', query: {propertId: item.propertId, relativePerId: item.relativePerId, debtType: item.debtType}})
         },
         // 资产缴费
-        GoPayment (index) {
-            window.sessionStorage.setItem('relativePerId', this.PaymentMsg[index].relativePerId)
-            window.sessionStorage.setItem('propertId', this.PaymentMsg[index].propertId)
-            this.$emit('onChangeFragment', 'Payment')
+        GoPayment (index, item) {
+            this.$router.push({path: '/Payment', query: {propertId: item.propertId, relativePerId: item.relativePerId}})
         }
     },
     created () {

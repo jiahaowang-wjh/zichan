@@ -116,7 +116,6 @@ export default {
           this.GetRandomImg();
           return this.$message.error(result.resultMessage);
         }
-
         // 存储用户信息到store
         this.SAVE_USER_INFO(result.data.additionalInformation);
         //
@@ -152,20 +151,10 @@ export default {
           result.data.additionalInformation.userAvatar
         );
         window.sessionStorage.setItem(
-          "userAvatar",
-          result.data.additionalInformation.userAvatar
-        );
-        window.sessionStorage.setItem(
           "companyType",
           result.data.additionalInformation.companyType
         );
         this.$message.success("登录成功");
-        // this.$router.push({
-        //   name: "Main",
-        //   params: {
-        //     username: result.data.additionalInformation.userNickname
-        //   }
-        // });
         store.dispatch("userMenus").then(() => {
           console.log(this.userMenuTree);
           this.$router.push({

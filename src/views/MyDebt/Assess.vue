@@ -14,7 +14,7 @@
                 </div>
                 <div>
                     <span></span>
-                    2.债权转让协议
+                    2.债权转让协议 
                 </div>
                 <div>
                     <span></span>
@@ -26,7 +26,7 @@
                 </div>
                 <div>
                     <span></span>
-                    5.债权转让通知书
+                    5.委托寄卖合同
                 </div>
                 <div>
                     <span></span>
@@ -84,7 +84,7 @@
                 <div class='assess-content-main-row2'>
                     <span class='assess-content-main-row2-title'>本次置换资产凭证</span>
                     <span class='assess-content-main-row2-form'>
-                        <input type="text" placeholder="请输入">
+                        <input type="text" placeholder="请输入" v-model='SubmitData.credentialsText'>
                     </span>
                 </div>
                 <div class='assess-content-main-row2-update'>
@@ -121,31 +121,6 @@ export default {
     data () {
         return {
             assessData: {},
-            pickerOptions: {
-                disabledDate (time) {
-                    return time.getTime() > Date.now()
-                },
-                shortcuts: [{
-                    text: '今天',
-                    onClick (picker) {
-                        picker.$emit('pick', new Date())
-                    }
-                }, {
-                    text: '昨天',
-                    onClick (picker) {
-                        const date = new Date()
-                        date.setTime(date.getTime() - 3600 * 1000 * 24)
-                        picker.$emit('pick', date)
-                    }
-                }, {
-                    text: '一周前',
-                    onClick (picker) {
-                        const date = new Date()
-                        date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
-                        picker.$emit('pick', date)
-                    }
-                }]
-            },
             UpdateImgsSrcList: [
                 {
                     ImgSrc: '',
@@ -174,13 +149,11 @@ export default {
             ],
             SubmitData: {
                 propertId: '',
-                assessmentDate: '',
                 credentials: '',
                 card: '',
                 companyManag: '',
                 status: '0',
-                checkReason: '无',
-                checkDate: '2019-03-04'
+                credentialsText: ''
             }
         }
     },
@@ -194,7 +167,8 @@ export default {
                 }
             })
             this.SubmitData.credentials = ImgsSrcList
-            this.SubmitData.propertId = window.sessionStorage.getItem('propertId')
+            this.SubmitData.propertId = this.$route.query.propertId
+            console.log(this.SubmitData)
             // 获取当前日期
             const date = new Date()
             const year = date.getFullYear()
@@ -215,10 +189,11 @@ export default {
                     'Content-Type': 'multipart/form-data'
                 }
             })
+            console.log('result', result)
             if (result.resultCode !== '200') return this.$message.error('提交信息失败, 请重试')
             // 更新资产审批状态
             const StatusFormData = new FormData()
-            StatusFormData.append('propertId', window.sessionStorage.getItem('propertId'))
+            StatusFormData.append('propertId', this.$route.query.propertId)
             StatusFormData.append('status', '1')
             const { data: StatusResult } = await this.$http({
                 method: 'post',
@@ -228,10 +203,11 @@ export default {
                     'Content-Type': 'multipart/form-data'
                 }
             })
+            console.log('StatusResult', StatusResult)
             if (StatusResult.resultCode !== '200') return this.$message.error('更改资产状态失败, 请重试')
             // 更新资产信息自身阶段
             const PropertFormData = new FormData()
-            PropertFormData.append('propertId', window.sessionStorage.getItem('propertId'))
+            PropertFormData.append('propertId', this.$route.query.propertId)
             PropertFormData.append('stage', '1')
             const { data: PropertStatusResult } = await this.$http({
                 method: 'post',
@@ -241,16 +217,17 @@ export default {
                     'Content-Type': 'multipart/form-data'
                 }
             })
+            console.log('PropertStatusResult', PropertStatusResult)
             if (PropertStatusResult.resultCode !== '200') return this.$message.error('更改资产阶段失败, 请重试')
 
             this.$message.success('提交资产评估成功')
-            this.$emit('onChangeFragment', 'MyDebt')
+            this.$router.push({path: '/MyDebt'})
         },
         // 获取相对人Id及通过相对人获取资产评估页面初始信息
         async GetRelativeId () {
-            const relativePerId = window.sessionStorage.getItem('relativePerId')
             const formData = new FormData()
-            formData.append('relativePerId', relativePerId)
+            formData.append('relativePerId', this.$route.query.relativePerId)
+            formData.append('propertId', this.$route.query.propertId)
             const { data: result } = await this.$http({
                 method: 'post',
                 url: '/api/api/busAssessmentController/initialize',

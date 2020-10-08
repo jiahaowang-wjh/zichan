@@ -16,27 +16,19 @@
             <div class='payment-info-content-update'>
                 上传凭证：
                 <div class='payment-info-content-update-box'>
-                    <div class='payment-info-content-update-box-container'>
-                        <img alt="">
-                    </div>
-                    <div class='payment-info-content-update-box-container'>
-                        <img alt="">
-                    </div>
-                    <div class='payment-info-content-update-box-container'>
-                        <img alt="">
-                    </div>
-                    <div class='payment-info-content-update-box-container'>
-                        <img alt="">
+                    <div class="payment-info-content-update-box-container">
+                        <img :src="item" v-for="(item,index) in SubmitData.voucher" :key="index" />
                     </div>
                 </div>
-                <button class='payment-info-content-update-button'>点击上传</button>
+                <button class="payment-info-content-update-button">点击上传</button>
+                <input @change="UpdataVoucher" type="file" ref="Voucher" />
             </div>
             <div class='payment-info-content-payer'>
                 合同人姓名：
                 <input type="text" placeholder="请输入" v-model='SubmitData.contractName'>
             </div>
             <div class='payment-info-content-payer'>打款人姓名：
-                <input type="text" placeholder="请输入" v-model='SubmitData.payertName'>
+                <input type="text" placeholder="请输入" :disabled='HasSubmit' v-model='SubmitData.payertName'>
             </div>
             <button class='payment-info-content-submit' @click='SubmitPayment'>提交</button>
         </div>
@@ -58,7 +50,7 @@ export default {
                 reportId: '',
                 contractName: '',
                 payertName: '',
-                voucher: ['12312312312'],
+                voucher: [],
                 cost: '880',
                 flag: '4',
                 status: '0',
@@ -68,15 +60,13 @@ export default {
                 status: '',
                 payId: ''
             },
-            HasSubmit: {
-
-            }
+            HasSubmit: false
         }
     },
     methods: {
         async SubmitPayment () {
             // 获取相对人ID => 获取报备ID
-            const relativePerId = window.sessionStorage.getItem('relativePerId')
+            const relativePerId = this.$route.query.relativePerId
             const ReportFormData = new FormData()
             ReportFormData.append('relativePerId', relativePerId)
             const { data: ReportResult } = await this.$http({
@@ -88,7 +78,7 @@ export default {
                 }
             })
             this.SubmitData.reportId = ReportResult.data.reportId
-            this.SubmitData.propertId = window.sessionStorage.getItem('propertId')
+            this.SubmitData.propertId = this.$route.query.propertId
             // 提交缴费
             const formData = new FormData()
             for (const key in this.SubmitData) {
@@ -117,6 +107,12 @@ export default {
             })
             if (StatusResult.resultCode !== '200') return this.$message.error('提交错误, 请重试')
             this.$message.success(StatusResult.resultMessage)
+        },
+        UpdataVoucher() {
+            const file = this.$refs.Voucher.files[0]
+            this.$UpdateFile(file).then((result) => {
+                this.SubmitData.voucher.push(result)
+            })
         }
     }
 }
@@ -170,39 +166,44 @@ export default {
             font-weight: 600;
         }
         &-update {
-            height: px2rem(16);
-            display: flex;
-            margin: px2rem(4) 0;
-            &-box {
-                width: px2rem(140);
-                height: px2rem(16);
-                border: 1px solid #E8EAEC;
-                margin: 0 px2rem(4);
-                display: flex;
-                align-items: center;
+      position: relative;
+      height: px2rem(16);
+      display: flex;
+      margin: px2rem(4) 0;
+      &-box {
+        width: px2rem(140);
+        border: 1px solid #e8eaec;
+        margin: 0 px2rem(4);
+        display: flex;
+        align-items: center;
 
-                &-container {
-                    border: 1px solid #E8E8E8;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    margin: 0 px2rem(1);
-                    height: px2rem(10);
-                    width: px2rem(14);
-                    img {
-                        width: px2rem(14);
-                        height: px2rem(8)
-                    }
-                }
-            }
-            &-button {
-                height: px2rem(9);
-                width: px2rem(25);
-                border: none;
-                background-color: #616789;
-                color: #fff;
-                border-radius: px2rem(2);
-            }
+        &-container {
+          margin: 0 px2rem(2);
+          height: px2rem(10);
+          img {
+            width: px2rem(16);
+            height: px2rem(10);
+            margin: 0 px2rem(1);
+            float: left
+          }
+        }
+      }
+      &-button {
+        height: px2rem(9);
+        width: px2rem(25);
+        border: none;
+        background-color: #616789;
+        color: #fff;
+        border-radius: px2rem(2);
+      }
+      input[type='file'] {
+        height: px2rem(9);
+        width: px2rem(20);
+        position: absolute;
+        left: px2rem(166);
+        bottom: px2rem(6);
+        opacity: 0;
+      }
         }
         &-payer {
             margin-top: px2rem(2);

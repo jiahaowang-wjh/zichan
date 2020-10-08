@@ -1,36 +1,36 @@
 <!--  -->
 <template>
-    <div class='promise'>
-        <div class='promise-title'>
-            <span class='promise-title-go1'>我的审批</span>
-            <span class='promise-title-separator'> / </span>
-            <span class='promise-title-go2'>委托代理销售合同 </span>
+    <div class='sales-agreement'>
+        <div class='sales-agreement-title'>
+            <span class='sales-agreement-title-go1'>我的审批</span>
+            <span class='sales-agreement-title-separator'> / </span>
+            <span class='sales-agreement-title-go2'>{{IsInernet? '委托线上代理销售合同' : '委托代理销售合同' }}</span>
         </div>
-        <div class='promise-content'>
-            <div class='promise-content-progress-map'>
-                <div class='promise-content-progress-map-finished'>
+        <div class='sales-agreement-content'>
+            <div class='sales-agreement-content-progress-map'>
+                <div class='sales-agreement-content-progress-map-finished'>
                     <span></span>
                     1.资产评估
                 </div>
-                <div class='promise-content-progress-map-finished'>
+                <div class='sales-agreement-content-progress-map-finished'>
                     <span></span>
                     2.债权转让协议
                 </div>
-                <div class='promise-content-progress-map-finished'>
+                <div class='sales-agreement-content-progress-map-finished'>
                     <span></span>
                     3.债权转让确认书
                 </div>
-                <div class='promise-content-progress-map-finished'>
+                <div class='sales-agreement-content-progress-map-finished'>
                     <span></span>
                     4.债权确认书
                 </div>
-                <div class='promise-content-progress-map-finished'>
+                <div class='sales-agreement-content-progress-map-finished'>
                     <span></span>
                     5.债权转让通知书
                 </div>
-                <div class='promise-content-progress-map-highlight'>
+                <div class='sales-agreement-content-progress-map-highlight'>
                     <span></span>
-                    6.委托代理销售合同
+                    6.{{IsInernet?'委托线上代理销售合同': '委托代理销售合同'}}
                 </div>
                 <div>
                     <span></span>
@@ -42,144 +42,291 @@
                 </div>
             </div>
             <!-- 背景横线 -->
-            <div class='promise-content-crossing'></div>
-            <div class='promise-content-main'>
-                <div class='promise-content-main-title'>
-                    委托代理销售合同
+            <div class='sales-agreement-content-crossing'></div>
+             <div class='sales-agreement-content-main'>
+                <div class='sales-agreement-content-main-title'>
+                    {{IsInernet?'委托线上代理销售合同': '委托代理销售合同'}}
                 </div>
-                <div style='margin: 4px 0'>
-                    <span style='width: 40px'>甲方:</span>
-                    <input type="text" style='width: 360px' :value='InitMsg.debtName'>
+                <el-row :gutter="24">
+                    <el-col :span="8">
+                        <span class='col-label'>合同编号：</span>
+                        <el-input type="text" :value='InitMsg.salesNo || InitMsg.protocolNo' :disabled='true'></el-input>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="8">
+                        <span class='col-label'>甲方（委托方）：</span>
+                        <el-input type="text" :value='InitMsg.debtName' :disabled='true'></el-input>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="8">
+                        <span class='col-label'>身份证号码/统一社会信用代码：</span>
+                        <el-input type="text" :value='InitMsg.debtIdCard' :disabled='true'></el-input>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="8">
+                        <span class='col-label'>通讯地址：</span>
+                        <el-input type="text" :value='Address' :disabled='true'></el-input>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="8">
+                        <span class='col-label'>联系人：</span>
+                        <el-input type="text" :value="InitMsg.debtName ? InitMsg.debtName : ''" :disabled='true'></el-input>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="8">
+                        <span class='col-label'>联系电话：</span>
+                        <el-input type="text" :value='Phone' :disabled='true'></el-input>
+                    </el-col>
+                </el-row>
+                <!-- 乙方是否为线上样式展示 -->
+                <template v-if='!IsInernet'>
+                    <div class='sales-agreement-content-main-text'>
+                        乙方（受托方）：深圳市方博商贸管理有限公司<br/>
+                        统一社会信用代码：91440300MA5G44JB4K<br/>
+                        联系地址：深圳市光明区公明街道公明社区公园路17栋301<br/>
+                        联系电话：<br/>
+                        甲乙双方经友好协商，就双方间的委托代理销售商品相关事宜达成一致意见，特签订本合同，以资共同遵守。<br/>
+                    </div>
+                    <h3>一、代销商品</h3>
+                    <div>甲方将相关商品交由乙方代销，寄售商品的名称、数量、单价等具体情况详见本合同附件《商品寄售清单》，本合同签订前，甲乙双方共同至寄售商品存放处进行清点，若商品存在种类不符、数量错误或质量瑕疵的，由甲方负责处理。</div>
+                </template>
+                <template v-else>
+                    <div class='sales-agreement-content-main-text'>
+                        乙方（受托方）：海南米多多电子商务有限公司   <br/>
+                        统一社会信用代码：91460100MA5TLMDW1X<br/>
+                        联系地址：海南省海口市龙华区城西镇龙昆南路山高村181号205室 <br/>
+                        联系电话： 17830015877   <br/>
+                        甲乙双方经友好协商，就双方间的委托线上代理销售商品相关事宜达成一致意见，特签订本合同，以资共同遵守。<br/>
+                    </div>
+                    <h3>一、代销商品</h3>
+                    <div>甲方将相关商品交由乙方线上商城代销，寄售商品的名称、数量、单价等具体情况详见本合同附件《商品寄售清单》，本合同签订前，甲乙双方共同至寄售商品存放处进行清点，若商品存在种类不符、数量错误或质量瑕疵的，由甲方负责处理。</div>
+                </template>
+                <h3>二、代销期间</h3>
+                <el-row :gutter="24">
+                    <el-col :span="24">
+                        <el-input :disabled='true' style='width: 100px' :value='createTimeYear'></el-input>年
+                        <el-input :disabled='true'style='width: 100px' :value='createTimetMonth'></el-input>月
+                        <el-input :disabled='true' style='width: 100px' :value='createTimeDay'></el-input>日至
+                        <el-input style='width: 100px' :disabled='true' :value='endTimeYear'></el-input>年
+                        <el-input :disabled='true' style='width: 100px' :value='endTimeMonth'></el-input>月
+                        <el-input :disabled='true' style='width: 100px' :value='endTimeDay'></el-input>
+                    </el-col>
+                </el-row>
+                <h3>三、代销金额</h3>
+                <div class='sales-agreement-content-main-text'>
+                    代销商品总价值人民币<el-input :disabled='true' style='width: 200px' :value='InitMsg.amountThis'></el-input>元（
+                    大写：<el-input :disabled='true' style='width: 300px' :value='InitMsg.amountThisMax'></el-input>元整）。
                 </div>
-                <div style='margin: 4px 0'>
-                    <span style='width: 180px'>身份证号码统一社会信用代码：</span>
-                    <input type="text" style='width: 220px' :value='InitMsg.debtIdCard'>
+                <template v-if='!IsInernet'>
+                    <h3>四、代销服务费</h3>
+                    <div class='sales-agreement-content-main-text'>
+                        甲方应向乙方支付代销服务费，服务费标准为销售金额的10%；甲乙双方以月为单位清算销售金额，并结算代销服务费。代销服务费包含乙方履行本合同所产生的全部费用，乙方不得另行向甲方主张仓储费、销售人员工资等费用。
+                    </div>
+                    <h3>五、代理销售货款支付方式</h3>
+                    <div class='sales-agreement-content-main-text'>
+                        （一）乙方在甲方交付代销商品之日起，从次月对应日开始向甲方支付代收的货款，乙方每月出售商品金额不低于<el-input :disabled='true' :value='InitMsg.averageMoney' style='width: 200px'></el-input>元（差额部分累计到最后一个月付清）。乙方通过银行转账方式将上述销售款项支付给甲方，甲方指定收款账户如下：<br/>
+                        <el-row :gutter="24">
+                            <el-col :span="8">
+                                <span class='col-label'>户名：</span>
+                                <el-input type="text" :value='InitMsg.debtName' :disabled='true'></el-input>
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="24">
+                            <el-col :span="8">
+                                <span class='col-label'>账号：</span>
+                                <el-input type="text" :value='InitMsg.bankCard' :disabled='true'></el-input>
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="24">
+                            <el-col :span="8">
+                                <span class='col-label'>开户行：</span>
+                                <el-input type="text" :value='InitMsg.bank' :disabled='true'></el-input>
+                            </el-col>
+                        </el-row>
+                        （二）为在一定程度上保障甲方的收款，乙方委托商业银行提供履约担保函，担保金额和担保期间等具体事宜以担保函载明的内容为准。
+                    </div>
+                    <h3>六、争议解决方法</h3>
+                    因本合同发生争议，甲、乙双方应友好协商解决；协商不成的，可向本合同签订地人民法院起诉。
+                    <h3>七、通知与送达</h3>
+                    <div class='sales-agreement-content-main-text'>
+                        （一）甲乙双方一致确认，本合同首部注明的通讯地址、联系人和联系电话为双方的有效送达地址，其适用范围包括：甲乙双方之间发出的任何通知、联络或争议进入民事诉讼程序后的一审程序、二审程序和执行程序有关司法文书的通知或送达。<br/>
+                        （二）对于任何通知、联络或司法文书，甲乙双方约定如下日期为正式送达日期：<br/>
+                        1.直接交付的，在交付时视为送达。<br/>
+                        2.以短信、微信方式发出的，以发件方发送后系统显示的时间视为送达。<br/>
+                        3.以邮政快递形式发出的，在收件人拒收或者因送达地址、联系人和联系电话错误或不详而被退回时视为送达。<br/>
+                        （三）甲乙双方的送达地址、联系人和联系电话如有变更的，须在变更前十日以书面形式通知相对方，在书面变更通知送达对方之前，视为送达地址、联系人和联系电话未变更。<br/>
+                    </div>
+                    <h3>八、其它</h3>
+                    <div class='sales-agreement-content-main-text'>
+                        （一）本合同未尽事宜，甲乙双方可另行协商并签订补充协议。<br/>
+                        （二）本合同自甲乙双方签字或盖章后生效。本合同一式两份，甲乙双方各执一份，均具同等法律效力。<br/>
+                    </div>
+                </template>
+                <template v-else>
+                    <h3>四、代销服务费</h3>
+                    <div class='sales-agreement-content-main-text'>
+                        （一）乙方在甲方交付代销商品之日起15个工作日内，一次性向甲方申请在乙方平台账户下充值等额积分，从次月对应日开始向甲方释放兑换积分，乙方每月释放的额为<el-input :disabled='true' :value='InitMsg.integral' style='width: 200px'></el-input>分（差额部分累计到最后一个月释放）。甲方在乙方平台的注册账户信息如下：
+                        <el-row :gutter="24">
+                            <el-col :span="8">
+                                <span class='col-label'>账号：</span>
+                                <el-input type="text" :value='Phone' :disabled='true'></el-input>
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="24">
+                            <el-col :span="8">
+                                <span class='col-label'>姓名：</span>
+                                <el-input type="text" :value='InitMsg.debtName' :disabled='true'></el-input>
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="24">
+                            <el-col :span="8">
+                                <span class='col-label'>身份证号：</span>
+                                <el-input type="text" :value='InitMsg.debtIdCard' :disabled='true'></el-input>
+                            </el-col>
+                        </el-row>
+                    </div>
+                    <div class='sales-agreement-content-main-text'>
+                        （二）为在一定程度上保障甲方的兑换权益，乙方委托商业银行提供履约担保函，担保金额和担保期间等具体事宜以担保函载明的内容为准。
+                    </div>
+                    <h3>五、争议解决方法</h3>
+                    <div class='sales-agreement-content-main-text'>
+                        因本合同发生争议，甲、乙双方应友好协商解决；协商不成的，可向本合同签订地人民法院起诉。
+                    </div>
+                    <h3>六、通知与送达</h3>
+                    <div class='sales-agreement-content-main-text'>
+                        （一）甲乙双方一致确认，本合同首部注明的通讯地址、联系人和联系电话为双方的有效送达地址，其适用范围包括：甲乙双方之间发出的任何通知、联络或争议进入民事诉讼程序后的一审程序、二审程序和执行程序有关司法文书的通知或送达。<br/>
+                        （二）对于任何通知、联络或司法文书，甲乙双方约定如下日期为正式送达日期：<br/>
+                        1.直接交付的，在交付时视为送达。<br/>
+                        2.以短信、微信方式发出的，以发件方发送后系统显示的时间视为送达。<br/>
+                        3.以邮政快递形式发出的，在收件人拒收或者因送达地址、联系人和联系电话错误或不详而被退回时视为送达。<br/>
+                        （三）甲乙双方的送达地址、联系人和联系电话如有变更的，须在变更前十日以书面形式通知对方，在书面变更通知送达对方之前，视为送达地址、联系人和联系电话未变更。<br/>
+                    </div>
+                    <h3>七、其它</h3>
+                    <div class='sales-agreement-content-main-text'>
+                        （一）本合同未尽事宜，甲乙双方可另行协商并签订补充协议。<br/>
+                        （二）本合同自甲乙双方签字或盖章后生效。本合同一式两份，甲乙双方各执一份，均具同等法律效力。<br/>
+                    </div>
+                </template>
+                <div style='text-align: center'>(以下无正文,为签署页)</div>
+                <div class='sales-agreement-content-main-container'>
+                    <!-- 左侧签字盖章 -->
+                    <el-row :gutter="24">
+                        <el-col :span="6">
+                            <span class='col-label'>甲方：</span>
+                            <el-input type="text" :value='InitMsg.debtName' :disabled='true'></el-input>
+                        </el-col>
+                        <el-col :span="2">
+                            <span class='col-label'></span>
+                        </el-col>
+                        <el-col :span="6">
+                            <span class='col-label'>乙方：</span>
+                            <el-input type="text" :value="'深圳市方博商贸管理有限公司'" :disabled='true'></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="24">
+                        <el-col :span="6">
+                            <span class='col-label'>时间：</span>
+                            <el-input type="text" :value='InitMsg.contractDate' :disabled='true'></el-input>
+                        </el-col>
+                        <el-col :span="2">
+                            <span class='col-label'></span>
+                        </el-col>
+                        <el-col :span="6">
+                            <span class='col-label'>时间：</span>
+                            <el-input type="text" :value='InitMsg.contractDate' :disabled='true'></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="24">
+                        <el-col :span="8">
+                            <span class='col-label'></span>
+                        </el-col>
+                        <el-col :span="6">
+                            <span class='col-label'>协议签约地：重庆市渝中区</span>
+                        </el-col>
+                    </el-row>
                 </div>
-                <div style='margin: 4px 0'>
-                    <span style='width: 70px'>联系地址：</span>
-                    <input type="text" style='width: 330px' :value="Address">
+                <div class='sales-agreement-content-main-button'>
+                    <button @click='Submit' :disabled='HasSubmitData'>提交</button>
                 </div>
-                <div style='margin: 4px 0'>
-                    <span style='width: 70px'>联系电话：</span>
-                    <input type="text" style='width: 330px' :value='Phone'>
-                </div>
-                <div class='promise-content-main-text'>
-                    乙方(受托方)：深圳金瑞盈通资产管理有限公司<br>
-                    统一社会信用代码：91440300359331797F<br>
-                    联系地址：深圳市光明区公明街道公明社区公园路17栋306<br>
-                    联系电话：18688724748<br>
-                </div>
-                <h3>一、甲方委托乙方代销下列商品：</h3>
-                <div class='promise-content-main-list-1-title'>
+                <h3 style='margin-top: 120px'>附件一: 商品寄售清单</h3>
+                <!-- <div class='sales-agreement-content-main-list'>
+                    <button>上传附件</button>
+                    <input type="file" ref='GoodSaleList' @change="UpdataSaleAreement">
+                </div> -->
+                <div class='sales-agreement-content-main-list-1-title'>
                     <span>序号</span>
                     <span>商品名</span>
-                    <span>产地</span>
-                    <span>规格</span>
+                    <span>型号</span>
                     <span>计量单位</span>
-                    <span>包装</span>
+                    <span>单价（元）</span>
                     <span>数量</span>
+                    <span>合计（元）</span>
                     <span>备注</span>
                     <span>操作</span>
                 </div>
-                <div class='promise-content-main-list-1'>
-                    <div class='promise-content-main-list-1-item' v-for='(item, index) in GoodsMsg' :key='item.id'>
-                        <span class='promise-content-main-list-1-item-1'>{{index + 1}}</span>
-                        <span class='promise-content-main-list-1-item-2'>
-                            <el-select v-model='GoodsMsg[index].modityName'>
-                                <el-option :label="goodItem.dictionDis" :value='goodItem.dictionDis' v-for='(goodItem,index) in GoodsList' :key='index'></el-option>
+                <div class='sales-agreement-content-main-list-1'>
+                    <div class='sales-agreement-content-main-list-1-item' v-for='(item, Listindex) in GoodsMsgList' :key='item.id'>
+                        <span class='sales-agreement-content-main-list-1-item-1'>{{Listindex + 1}}</span>
+                        <!-- 商品名 -->
+                        <span class='sales-agreement-content-main-list-1-item-2'>
+                            <el-select v-model='selectValue[Listindex]' @change="(val) => selectChange(Listindex)" value-key='modityName'>
+                                <el-option :label="OptionItem.modityName" :value='OptionItem' v-for='(OptionItem,OptionIndex) in GoodsMsg' :key='OptionItem.modityName'></el-option>
                             </el-select>
                         </span>
-                        <span class='promise-content-main-list-1-item-3'>
-                            <el-select v-model='GoodsMsg[index].modityPlace'>
-                                <el-option :label="goodItem.dictionDis" :value='goodItem.dictionDis' v-for='(goodItem,index) in PlaceList' :key='index'></el-option>
-                            </el-select>
+                        <!-- 型号 -->
+                        <span class='sales-agreement-content-main-list-1-item-3'>
+                            <el-input v-model='GoodsMsgList[Listindex].moditySpecificat' :disabled='true'></el-input>
                         </span>
-                        <span class='promise-content-main-list-1-item-3'>
-                            <el-select v-model='GoodsMsg[index].moditySpecificat'>
-                                <el-option :label="goodItem.dictionDis" :value='goodItem.dictionDis' v-for='(goodItem,index) in SizeList' :key='index'></el-option>
-                            </el-select>
+                        <!-- 计量单位 -->
+                        <span class='sales-agreement-content-main-list-1-item-3'>
+                            <el-input v-model='GoodsMsgList[Listindex].partyaSeal' :disabled='true'></el-input>
                         </span>
-                        <span class='promise-content-main-list-1-item-3'>
-                            <el-select v-model='GoodsMsg[index].partyaSeal'>
-                                <el-option :label="goodItem.dictionDis" :value='goodItem.dictionDis' v-for='(goodItem,index) in UnitList' :key='index'></el-option>
-                            </el-select>
+                        <!-- 单价（元） -->
+                        <span class='sales-agreement-content-main-list-1-item-3'>
+                            <el-input v-model='GoodsMsgList[Listindex].modityPlace' :disabled='true'></el-input>
                         </span>
-                        <span class='promise-content-main-list-1-item-3'>
-                            <el-select v-model='GoodsMsg[index].partyaTime'>
-                                <el-option :label="goodItem.dictionDis" :value='goodItem.dictionDis' v-for='(goodItem,index) in PackingList' :key='index'></el-option>
-                            </el-select>
+                        <!-- 数量 -->
+                        <span class='sales-agreement-content-main-list-1-item-3'>
+                            <el-input v-model='GoodsMsgList[Listindex].partybSeal'></el-input>
                         </span>
-                        <span class='promise-content-main-list-1-item-3'>
-                            <el-input v-model='GoodsMsg[index].partybSeal'></el-input>
+                        <!-- 合计（元） -->
+                        <span class='sales-agreement-content-main-list-1-item-3'>
+                            <el-input :disabled='true' :value='Number(GoodsMsgList[Listindex].partybSeal) * (GoodsMsgList[Listindex].modityPlace)'></el-input>  <!-- -->
                         </span>
-                        <span class='promise-content-main-list-1-item-4'>
-                            <el-input v-model='GoodsMsg[index].partybTime'></el-input>
+                        <!-- 备注 -->
+                        <span class='sales-agreement-content-main-list-1-item-4'>
+                            <el-input v-model='GoodsMsgList[Listindex].partybTime'></el-input>
                         </span>
-                        <span class='promise-content-main-list-1-item-4'>
-                            <button @click='DelecteItem(index)'>删除</button>
+                        <!-- 操作 -->
+                        <span class='sales-agreement-content-main-list-1-item-4'>
+                            <button @click='DelecteItem(Listindex)'>删除</button>
                         </span>
                     </div>
                     <button @click='AddItem()'>点击添加</button>
                 </div>
-                <h3>二、上列代销价格按以下办法执行：</h3>
-                <div class='promise-content-main-text'>
-                    1、代销期间： <input type="text" :value='InitMsg.createTime' style='width: 140px'>至 <input type="text" :value='InitMsg.endTime' style='width: 140px'> <br>
-                    2、代销商品定价总额 <input type="text" :value='InitMsg.amountThis' >元（大写：<input type="text" :value='InitMsg.amountThisMax' style='width: 140px'>圆整<br>
-                    3、乙方在收货之日起，从次月对应日开始向甲方支付代销的货款，乙方每月代销商品金额不低于<input type="text">元（差额部分累计到最后一个月付清）。乙方通过银行转账方式将上述销售款项支付给甲方。 <br>
-                    4、甲方收款账户<br>
-                    户名：<input type="text" style='width: 220px' :value='InitMsg.debtName'><br>
-                    账号：<input type="text" style='width: 220px' :value='InitMsg.bankCard'><br>
-                    开户行：<input type="text" style='width: 210px' :value='InitMsg.bank'><br>
-                    三、商品包装应按运输部门规定办理。否则运输途中损失由甲方负责。<br>
-                    四、交货地点：凭乙方发货通知单，由甲方代办托运直拨至购货单位。<br>
-                    五、代销商品发货数量必须根据乙方通知。<br>
-                    六、手续费收取与结算按下列办法：按销售货款总额  10   %收取手续费；待乙方收到货款后，即给甲方结算并扣回代垫费用。<br>
-                    七、甲方代销商品应与样品相符，保质保量，代销数量、规格、价格，有效期内如有变更，甲方必须及时通知乙方，通知到达前，已由乙方签出的合同，应照旧履行。如因质量或供应脱节而造成的损失和费用（包括手续费），均由甲方负责。<br>
-                    八、附议：<input type="text" v-model='SubmitData.second'><br>
-                    九、甲、乙双方应严格履行本协议，违约方应承担违约责任。造成损失的，承担赔偿责任。<br>
-                    十、本协议在履行过程中如发生争议或纠纷，甲、乙双方应友好协商解决，协商不能解决时，任何一方可向当地人民法院起诉解决。<br>
-                    十一、本协议一式两份，甲乙双方各执一份，签字盖章生效，具有同等法律效力。<br>
-                </div>
-                <div class='promise-content-main-container'>
-                    <!-- 左侧签字盖章 -->
-                    <div  class='promise-content-main-container-item'>
-                        <div>
-                            <span>甲方签字</span>
-                            <input type="text">
-                        </div>
-                        <div>
-                            <span>甲方盖章按捺印</span>
-                            <button>上传电子章</button>
-                        </div>
-                        <div>
-                            <span>时间</span>
-                            <input type="text" v-model='SubmitData.partyaTime'>
-                        </div>
-                    </div>
-                    <div class='promise-content-main-container-item'>
-                    <!-- 右侧签字盖章 -->
-                        <div>
-                            <span>乙方签字</span>
-                            <input type="text">
-                        </div>
-                        <div>
-                            <span>甲方盖章按捺印</span>
-                            <button>上传电子章</button>
-                        </div>
-                        <div>
-                            <span>时间</span>
-                            <input type="text" v-model='SubmitData.partybTime'>
-                        </div>
-                    </div>
-                </div>
-                <div class='promise-content-main-button'>
-                    <button @click='Submit' :disabled='HasSubmitData'>提交</button>
-                </div>
-                <div class='promise-content-main-list'>
-                    <h3>附件一: 商品寄售清单</h3>
-                    <button>上传附件</button>
-                    <input type="file" ref='GoodSaleList' @change="UpdataSaleAreement">
-                </div>
+                <el-row :gutter="24" style='margin-top: 50px'>
+                    <el-col :span="8">
+                        <span class='col-label'>寄售人确认签字捺印：</span>
+                        <el-input type="text" :value='InitMsg.assignmentAgreementNo' :disabled='true'></el-input>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="8">
+                        <span class='col-label'>寄售人盖章：</span>
+                        <el-button type="primary" size='mini'>上传电子章</el-button>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="8">
+                        <span class='col-label'>寄售人盖章：</span>
+                        <el-button type="primary" size='mini'>上传电子章</el-button>
+                    </el-col>
+                </el-row>
             </div>
         </div>
     </div>
@@ -191,75 +338,87 @@ export default {
         return {
             InitMsg: {},
             SubmitData: {
-                propertId: '',
-                dateStart: '',
-                dateEnd: '',
-                second: '1111',
-                partyaSeal: '11',
-                partyaTime: '',
-                partybSeal: '222',
-                partybTime: '',
-                annex: '无',
-                'busAgentSalesContractModity[0].modityName': '笔记本',
-                'busAgentSalesContractModity[0].modityPlace': '上海',
-                'busAgentSalesContractModity[0].moditySpecificat': ' 20 X 30',
-                'busAgentSalesContractModity[0].partyaSeal': '个',
-                'busAgentSalesContractModity[0].partyaTime': '精品',
-                'busAgentSalesContractModity[0].partybSeal': 1,
-                'busAgentSalesContractModity[0].partybTime': '备注'
+                // 资产ID
+                propertId: this.$route.query.propertId,
+                // 代理销售合同ID
+                salesNo: '',
+                // 签约日期
+                contractDate: ''
             },
-            GoodsList: [],
-            PlaceList: [],
-            SizeList: [],
-            UnitList: [],
-            PackingList: [],
             // 商品信息列表
-            GoodsMsg: [
+            GoodsMsgList: [
                 {
                     id: 100,
                     // 商品名
                     modityName: '',
-                    // 商品产地
+                    // 商品单价
                     modityPlace: '',
-                    // 商品规格
+                    // 商品型号
                     moditySpecificat: '',
                     // 计量单位
                     partyaSeal: '',
-                    // 商品包装
-                    partyaTime: '',
+                    // 合计金额
+                    moneyNum1: '',
                     // 商品数量
                     partybSeal: '',
                     // 商品备注
                     partybTime: ''
                 }
             ],
+            GoodsMsg: [],
             // 计数用作用,给ID赋值
             Num: 101,
             // 记录当前index
             Index: 0,
-            HasSubmitData: false
+            HasSubmitData: false,
+            // 判断是否为线上销售
+            IsInernet: false,
+            selectValue: []
         }
     },
     methods: {
         async InitData () {
-            const relativePerId = window.sessionStorage.getItem('relativePerId')
+            if (this.$route.query.debtType === '2') {
+                this.IsInernet = false
+            } else {
+                this.IsInernet = true
+            }
             const formData = new FormData()
-            formData.append('relativePerId', relativePerId)
-            const { data: result } = await this.$http({
-                method: 'post',
-                url: '/api/api/busAgentSalesContractController/initialize',
-                data: formData,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-            this.InitMsg = result.data
+            formData.append('relativePerId', this.$route.query.relativePerId)
+            formData.append('propertId', this.$route.query.propertId)
+            formData.append('comId', window.sessionStorage.getItem('companyId'))
+            if (!this.IsInernet) {
+                const { data: result } = await this.$http({
+                    method: 'post',
+                    url: '/api/api/busAgentSalesContractController/initialize',
+                    data: formData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                this.InitMsg = result.data
+            } else {
+                const { data: result } = await this.$http({
+                    method: 'post',
+                    url: '/api/api/cumoutProtocolController/initialize',
+                    data: formData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                this.InitMsg = result.data
+                console.log(this.InitMsg)
+            }
         },
         async Submit () {
+            // 获取合计金额
+            this.GoodsMsgList.map((v,index) => {
+                this.GoodsMsgList[index].moneyNum1 = Number(this.GoodsMsgList[index].partybSeal) * Number(this.GoodsMsgList[index].modityPlace)
+            })
             // 第一次过滤, 清除有空元素的行
             // 获取有空元素的下标数组
-            const NullIndexs = []
-            this.GoodsMsg.map((v, i) => {
+            let NullIndexs = []
+            this.GoodsMsgList.map((v, i) => {
                 for (const key in v) {
                     if (!v[key]) {
                         NullIndexs.push(i)
@@ -267,39 +426,53 @@ export default {
                     }
                 }
             })
-            const AllMsgList = this.GoodsMsg
-            const ClearNullGoodsMsg = []
-            AllMsgList.map((v, index) => {
-                for (const key in NullIndexs) {
-                    if (index !== NullIndexs[key]) {
-                        return ClearNullGoodsMsg.push(AllMsgList[index])
-                    }
-                }
-            })
-            ClearNullGoodsMsg.map((v, i) => {
+            if (NullIndexs !== []) {
+                NullIndexs.map(v => {
+                    this.GoodsMsgList = this.GoodsMsgList.filter((gvalue,gindex) => {
+                        return v !== gindex
+                    })
+                })
+            }
+            this.GoodsMsgList.map((v, i) => {
                 for (const key in v) {
+                    console.log(key,i)
                     this.$set(this.SubmitData, `busAgentSalesContractModity[${i}].${key}`, v[key])
                 }
             })
-            this.SubmitData.propertId = window.sessionStorage.getItem('propertId')
-            this.SubmitData.dateStart = this.InitMsg.createTime
-            this.SubmitData.dateEnd = this.InitMsg.endTime
+            this.SubmitData.contractDate  = this.InitMsg.contractDate
             const formData = new FormData()
             for (const key in this.SubmitData) {
                 formData.append(key, this.SubmitData[key])
             }
-            const { data: result } = await this.$http({
-                method: 'post',
-                url: '/api/api/busAgentSalesContractController/insertSelective',
-                data: formData,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-            if (result.resultCode !== '200') return this.$message.error(result.resultMessage)
-            // 更改报备状态
+            if (this.$route.query.debtType === '2') {
+                this.SubmitData.salesNo = this.InitMsg.salesNo
+                // 调用新增资产委托代理销售合同
+                console.log('11111')
+                await this.$http({
+                    method: 'post',
+                    url: '/api/api/busAgentSalesContractController/insertSelective',
+                    data: formData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+            } else {
+                this.SubmitData.protocolNo = this.InitMsg.protocolNo
+                console.log(this.SubmitData)
+                // 调用新增线上委托销售合同
+                console.log('22222')
+                await this.$http({
+                    method: 'post',
+                    url: '/api/api/cumoutProtocolController/insertSelective',
+                    data: formData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+            }
+            // // 更改报备状态
             const PropertFormData = new FormData()
-            PropertFormData.append('propertId', window.sessionStorage.getItem('propertId'))
+            PropertFormData.append('propertId', this.$route.query.propertId)
             PropertFormData.append('stage', '6')
             const { data: PropertStatusResult } = await this.$http({
                 method: 'post',
@@ -310,75 +483,23 @@ export default {
                 }
             })
             if (PropertStatusResult.resultCode !== '200') return this.$message.error(PropertStatusResult.resultMessage)
-            this.$message.success(result.resultMessage)
             this.HasSubmitData = true
-            this.$emit('onChangeFragment', 'CollectionLetters')
+            this.$message.success('提交成功')
+            this.$router.push({path: '/CollectionLetters', query: {propertId: this.$route.query.propertId, relativePerId: this.$route.query.relativePerId}})
         },
         // 获取商品数据
-        async GetGoodsMsg () {
-            const formData = new FormData()
-            // 商品
-            const { data: GoodsResult } = await this.$http({
-                method: 'post',
-                url: '/api/api/pubDictionController/selectCommodity',
-                data: formData,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-            this.GoodsList = GoodsResult.data
-            // 产地
-            const { data: PlaceResult } = await this.$http({
-                method: 'post',
-                url: '/api/api/pubDictionController/selectPlace',
-                data: formData,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-            this.PlaceList = PlaceResult.data
-            // 规格
-            const { data: SizeResult } = await this.$http({
-                method: 'post',
-                url: '/api/api/pubDictionController/selectNorm',
-                data: formData,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-            this.SizeList = SizeResult.data
-            // 计量单位
-            const { data: UnitResult } = await this.$http({
-                method: 'post',
-                url: '/api/api/pubDictionController/selectMeasure',
-                data: formData,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-            this.UnitList = UnitResult.data
-            // 计量包装
-            const { data: PackingResult } = await this.$http({
-                method: 'post',
-                url: '/api/api/pubDictionController/selectPackage',
-                data: formData,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-            this.PackingList = PackingResult.data
-        },
         AddItem () {
-            this.GoodsMsg.push({
+            this.GoodsMsgList.push({
                 id: this.Num,
+                // 商品名称
                 modityName: '',
-                // 商品产地
+                // 商品单价
                 modityPlace: '',
-                // 商品规格
+                // 商品型号
                 moditySpecificat: '',
                 // 计量单位
                 partyaSeal: '',
-                // 商品包装
+                // 合计金额
                 partyaTime: '',
                 // 商品数量
                 partybSeal: '',
@@ -391,7 +512,8 @@ export default {
             this.index = this.index + 1
         },
         DelecteItem (index) {
-            this.GoodsMsg.splice(index, 1)
+            this.GoodsMsgList.splice(index, 1)
+            this.selectValue.splice(index, 1)
             this.index = this.index - 1
         },
         async UpdataSaleAreement () {
@@ -399,11 +521,32 @@ export default {
             file = this.$refs.GoodSaleList.files[0]
             const result = await this.$UpdateFile(file)
             this.SubmitData.annex = result
+        },
+        // 查询商品信息
+        async SearchGoodsMsg () {
+            const { data: result } = await this.$http({
+                method: 'post',
+                url: '/api/api/busAgentSalesContractModityController/queryComm',
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            this.GoodsMsg = result.data
+        },
+        // 点击下拉修改商品信息时, 对应信息的修改
+        selectChange (Listindex) {
+            // 型号赋值更改
+            this.GoodsMsgList[Listindex].modityName = this.selectValue[Listindex].modityName
+            this.GoodsMsgList[Listindex].moditySpecificat = this.selectValue[Listindex].moditySpecificat
+            // 计量单位赋值更改
+            this.GoodsMsgList[Listindex].partyaSeal = this.selectValue[Listindex].partyaSeal
+            // 单价赋值更改
+            this.GoodsMsgList[Listindex].modityPlace = this.selectValue[Listindex].modityPlace
         }
     },
     created () {
         this.InitData()
-        this.GetGoodsMsg()
+        this.SearchGoodsMsg()
     },
     computed: {
         Address: function () {
@@ -419,6 +562,24 @@ export default {
             } else {
                 return this.InitMsg.corBankPhone
             }
+        },
+        createTimeYear: function () {
+            return (this.InitMsg.createTime || '').split('-')[0]
+        },
+        createTimetMonth: function () {
+            return (this.InitMsg.createTime || '').split('-')[1]
+        },
+        createTimeDay: function () {
+            return (this.InitMsg.createTime || '').split('-')[2]
+        },
+        endTimeYear: function () {
+            return (this.InitMsg.endTime || '').split('-')[0]
+        },
+        endTimeMonth: function () {
+            return (this.InitMsg.endTime || '').split('-')[1]
+        },
+        endTimeDay: function () {
+            return (this.InitMsg.endTime || '').split('-')[2]
         }
     }
 }
@@ -426,7 +587,34 @@ export default {
 </script>
 <style lang='scss' scoped>
 @import '@css/style.scss';
-.promise {
+.el-row {
+  .el-col {
+    display: flex;
+    padding: 0 20px;
+    margin: 5px 0;
+    line-height: 40px;
+    input {
+        width: 100%;
+    }
+    .col-label {
+      flex-shrink: 0;
+      margin-right: 10px;
+    }
+    /deep/.el-form-item {
+      width: 100%;
+      .el-select {
+        width: 100%;
+      }
+      .el-input {
+        width: 100%;
+      }
+      .el-date-editor {
+        width: 100%;
+      }
+    }
+  }
+}
+.sales-agreement {
     display: flex;
     flex-direction: column;
     background-color: #E9F0F5;
@@ -435,7 +623,7 @@ export default {
     &-title {
         height: px2rem(12);
         line-height: px2rem(12);
-        font-size: px2rem(4);
+        font-size: 16px;
         color: #FC7F89;
         margin: 0 px2rem(4);
         &-go1 {
@@ -462,7 +650,7 @@ export default {
                 flex: 1;
                 flex-direction: column;
                 align-items: center;
-                font-size: px2rem(3.2);
+                font-size: 12px;
                 color: #DFE0E7;
                 span {
                     background-color: #DFE0E7;
@@ -527,7 +715,6 @@ export default {
                     box-sizing: border-box;
                     border: 1px solid #ffffff!important;
                     text-align: center;
-                    font-size: px2rem(3.5);
                     color: #fff;
                     flex:1.4;
                 }
@@ -609,7 +796,7 @@ export default {
                 }
             }
             &-text {
-                line-height: px2rem(6);
+                line-height: 25px;
             }
             &-last-text {
                 margin: px2rem(8)
@@ -630,28 +817,7 @@ export default {
                 display: inline-block;
             }
             &-container {
-                display: flex;
-                margin: px2rem(10) 0;
-                &-item {
-                    width: px2rem(120);
-                    div {
-                        margin: px2rem(2) 0;
-                    }
-                    input {
-                        width: px2rem(50);
-                        margin-left: px2rem(3);
-                        height: px2rem(5);
-                    }
-                    button {
-                        padding: px2rem(1) px2rem(2);
-                        font-size: px2rem(3);
-                        border: none;
-                        background-color: #616789;
-                        margin-left: px2rem(3);
-                        color: #fff;
-                        border-radius: px2rem(1);
-                    }
-                }
+                margin: 80px 0;
             }
 
             &-list {

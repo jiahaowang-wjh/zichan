@@ -8,38 +8,51 @@
         </div>
         <div class='collection-letters-content'>
             <div class='collection-letters-content-progress-map'>
-                <div class='promise-content-progress-map-finished'>
+                <div class='collection-letters-content-progress-map-finished'>
                     <span></span>
                     1.资产评估
                 </div>
-                <div class='promise-content-progress-map-finished'>
+                <div class='collection-letters-content-progress-map-finished'>
                     <span></span>
                     2.债权转让协议
                 </div>
-                <div class='promise-content-progress-map-finished'>
+                <div class='collection-letters-content-progress-map-finished'>
                     <span></span>
                     3.债权转让确认书
                 </div>
-                <div class='promise-content-progress-map-finished'>
+                <div class='collection-letters-content-progress-map-finished'>
                     <span></span>
                     4.债权确认书
                 </div>
-                <div class='promise-content-progress-map-finished'>
+                <div class='collection-letters-content-progress-map-finished'>
                     <span></span>
                     5.债权转让通知书
                 </div>
-                <div class='promise-content-progress-map-finished'>
-                    <span></span>
-                    6.委托代理销售合同
-                </div>
-                <div class='promise-content-progress-map-highlight'>
-                    <span></span>
-                    7.催款函
-                </div>
-                <div>
-                    <span></span>
-                    8.和解协议
-                </div>
+                <!-- 如果解债类型为depttype = 1,否则则显示下面的template  -->
+                <template v-if="debtType === '1'">
+                    <div class='collection-letters-content-progress-map-highlight'>
+                        <span></span>
+                        6.催款函
+                    </div>
+                    <div>
+                        <span></span>
+                        7.和解协议
+                    </div>
+                </template>
+                <template v-else>
+                    <div class='collection-letters-content-progress-map-finished'>
+                        <span></span>
+                        {{debtType === '2' ? '6.委托代理销售合同' : '6.委托线上代理销售合同'}}
+                    </div>
+                    <div class='collection-letters-content-progress-map-highlight'>
+                        <span></span>
+                        7.催款函
+                    </div>
+                    <div>
+                        <span></span>
+                        8.和解协议
+                    </div>
+                </template>
             </div>
             <!-- 背景横线 -->
             <div class='collection-letters-content-crossing'></div>
@@ -48,45 +61,21 @@
                     催款函
                 </div>
                 <div class='collection-letters-content-main-text'>
-                    致: <input type="text" :value='InitMsg.personName'><br>
-                    根据(<input type="text" :value='InitMsg.debtName'>）（简称“债权转让方”)与本公司(简称“债权受让方”)签订的《债权转让协议》(编号:<input type="text" :value='InitMsg.assignmentAgreementNo' >）,债权转让方已依法将《借款合同》项下对贵单位(您)所有权利(以下简称“标的债权”)转让给本公司,包括但不限于本金、利息、罚息、复利、违约金及费用等。截止本催款函发出之日,本公司依法对贵单位(您)享有到期债权共计人民币<input type="text" :value='InitMsg.amountThis'>元（大写: <input type="text" :value='InitMsg.moneyMax'>整），但至今贵单位(您)仍未支付。请贵单位(您)自收到本函之日起3日内将上述逾期未付的款项汇付至本公司指定账户:
+                    致: <el-input :disabled='true' type="text" :value='InitMsg.personName'></el-input><br>
+                    根据 债权转让方<el-input :disabled='true' type="text" :value='InitMsg.debtName'></el-input>与我司签订的《债权转让协议》（编号：<el-input :disabled='true' type="text" :value='InitMsg.assignmentAgreementNo' style='width: 300px'></el-input>）），债权转让方已依法将《借款合同》项下对贵方的所有权利转让给我司，包括但不限于本金、利息、罚息、复利、违约金及费用等。截止本催款函发出之日，我司依法对贵方享有到期债权共计人民币<el-input :disabled='true' type="text" :value='InitMsg.amountThis'></el-input>元（大写： <el-input :disabled='true' type="text" :value='InitMsg.moneyMax'></el-input>整），请贵方自收到本函之日起3日内将上述逾期未付的款项汇付至本公司指定账户：
                 </div>
                 <div class='collection-letters-content-main-message'>
-                    账户名称：深圳市金隆盛投资管理有限公司<br>
-                    开户银行：中国银行股份有限公司深圳南油支行<br>
-                    账号：745868704479<br>
+                    账  名：深圳市金隆盛投资管理有限公司<br/>
+                    开户行：中国银行股分有限公司深圳南油支行<br/>   
+                    账  号：745868704479<br/> 
+                    请贵方按照上述日期及时付款。逾期，我司将采取法律手段依法，届时贵方除应支付前述款项外，还将承担诉讼费、保全费等司法成本。<br/>
+                    特此函告!<br/>
                 </div>
-                <div class='collection-letters-content-main-last-text'>
-                    请贵单位(您)按照上述日期及时付款。否则,我司将按照协议约定计算违约金及款项逾期利息,并将采取法律手段解决,届时可能造成贵单位(您)不良影响并将有损贵单位(您)形象。<br>
-                    特此函告!<br>
-                </div>
-                <div class='collection-letters-content-main-container'>
-                    <span>注:本函一式两份,双方各执一份,具备同等效力</span>
-                    <span>
-                        深圳金瑞盈通资产管理有限公司
-                        <button>上传电子章</button>
-                    </span>
-                </div>
-                <div class='collection-letters-content-main-list'>
-                    <div>
-                        甲方确认送达地址：<input type="text" v-model='SubmitData.partyaAddr'>
-                    </div>
-                    <div>
-                        甲方确认送达联系人：<input type="text" v-model='SubmitData.partyaPerson'>
-                    </div>
-                    <div>
-                        甲方确认送达联系电话：<input type="text" v-model='SubmitData.partyaTel'>
-                    </div>
-                </div>
-                <div class='collection-letters-content-main-list'>
-                    <div>
-                        乙方确认送达地址：<input type="text" v-model='SubmitData.partybAddr'>
-                    </div>
-                    <div>
-                        乙方确认送达联系人：<input type="text" v-model='SubmitData.partybPerson'>
-                    </div>
-                    <div>
-                        乙方确认送达联系电话：<input type="text" v-model='SubmitData.partybTel'>
+                <div class='collection-letters-content-main-name'>
+                    <span>催款人：深圳市金隆盛投资管理有限公司</span>
+                    <div class='collection-letters-content-main-name-item'>
+                        <span>时间：</span>
+                        <el-input :disabled='true' type="text" v-model='InitMsg.contractDate' style='width:300px'></el-input>
                     </div>
                 </div>
                 <div class='collection-letters-content-main-button'>
@@ -103,22 +92,19 @@ export default {
         return {
             InitMsg: {},
             SubmitData: {
-                propertId: '',
-                partyaAddr: '',
-                partyaPerson: '',
-                partyaTel: '',
-                partybAddr: '',
-                partyaTime: '',
-                partybPerson: '',
-                partybTel: ''
-            }
+                propertId: this.$route.query.propertId,
+                collectionLettertNo: '',
+                contractDate: ''
+            },
+            debtType: ''
         }
     },
     methods: {
         async InitData () {
-            const relativePerId = window.sessionStorage.getItem('relativePerId')
             const formData = new FormData()
-            formData.append('relativePerId', relativePerId)
+            formData.append('relativePerId', this.$route.query.relativePerId)
+            formData.append('propertId', this.$route.query.propertId)
+            formData.append('comId', window.sessionStorage.getItem('companyId'))
             const { data: result } = await this.$http({
                 method: 'post',
                 url: '/api/api/busCollectionLetterController/initialize',
@@ -129,9 +115,11 @@ export default {
             })
             this.InitMsg = result.data
             console.log(this.InitMsg)
+            this.debtType = this.$route.query.debtType
         },
         async Submit () {
-            this.SubmitData.propertId = window.sessionStorage.getItem('propertId')
+            this.SubmitData.collectionLettertNo = this.InitMsg.collectionLettertNo
+            this.SubmitData.contractDate = this.InitMsg.contractDate
             const formData = new FormData()
             for (const key in this.SubmitData) {
                 formData.append(key, this.SubmitData[key])
@@ -147,7 +135,7 @@ export default {
             if (result.resultCode !== '200') return this.$message.error(result.resultMessage)
             // 更新资产信息自身阶段
             const PropertFormData = new FormData()
-            PropertFormData.append('propertId', window.sessionStorage.getItem('propertId'))
+            PropertFormData.append('propertId', this.$route.query.propertId)
             PropertFormData.append('stage', '7')
             const { data: PropertStatusResult } = await this.$http({
                 method: 'post',
@@ -158,7 +146,8 @@ export default {
                 }
             })
             if (PropertStatusResult.resultCode !== '200') return this.$message.error('更改资产阶段失败, 请重试')
-            this.$emit('onChangeFragment', 'Compromise')
+            this.$message.success('提交成功')
+            this.$router.push({path: '/Compromise', query: {propertId: this.$route.query.propertId, relativePerId: this.$route.query.relativePerId, debtType: this.debtType}})
         }
     },
     created () {
@@ -169,6 +158,9 @@ export default {
 </script>
 <style lang='scss' scoped>
 @import '@css/style.scss';
+.el-input {
+    width: 200px;
+}
 .collection-letters {
     display: flex;
     flex-direction: column;
@@ -249,15 +241,6 @@ export default {
                 text-align: center;
                 font-weight: 600;
             }
-            input {
-                background-color: #fff;
-                border: 1px solid #DFE0E7;
-                border-radius: px2rem(1);
-                margin:0 px2rem(1);
-                background-color: #F2F6F9;
-                height: px2rem(4.5);
-                width: px2rem(30);
-            }
             &-text {
                 line-height: px2rem(9);
             }
@@ -289,17 +272,14 @@ export default {
                     border-radius: px2rem(1);
                 }
             }
-            &-last-text {
-                margin: px2rem(10) 0;
-            }
-            &-list {
+            &-name {
                 display: flex;
-                line-height: px2rem(10);
-                div {
-                    flex: 1;
-                    input {
-                        width: px2rem(50);
-                    }
+                flex-direction: column;
+                align-items: flex-end;
+                margin-right: 100px;
+                &-item {
+                    margin-top: 20px;
+                    margin-bottom: 60px;
                 }
             }
         }

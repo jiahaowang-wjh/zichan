@@ -1,7 +1,6 @@
 @import './dimens.scss';
 @import './reset';
 @import './colors.scss';
-
 // 文本最多两行展示
 .text-line-2 {
     overflow: hidden;
@@ -59,7 +58,12 @@
     color: white;
     text-align: center;
 }
-
+.el-input.is-disabled .el-input__inner {
+    background-color: #E0E3F8!important;
+}
+.el-button--mini>span {
+    font-size: 17px!important;
+}
 // 输入框
 .input-container {
     height: px2rem(48);

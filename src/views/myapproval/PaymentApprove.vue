@@ -17,16 +17,7 @@
                 凭证信息：
                 <div class='payment-civil-content-update-box'>
                     <div class='payment-civil-content-update-box-container'>
-                        <img alt="">
-                    </div>
-                    <div class='payment-civil-content-update-box-container'>
-                        <img alt="">
-                    </div>
-                    <div class='payment-civil-content-update-box-container'>
-                        <img alt="">
-                    </div>
-                    <div class='payment-civil-content-update-box-container'>
-                        <img alt="">
+                        <img :src='item' alt="" v-for='item in InitMsg.voucher'>
                     </div>
                 </div>
             </div>
@@ -68,22 +59,31 @@ export default {
                 status: '',
                 propertId: ''
             },
-            InitMsg: {}
+            InitMsg: {},
+            // 新增公章数据
+            AddSealData: {
+                reportId: this.$route.query.reportId,
+                parta: '邓丽清',
+                partaCard: '440981198801011427',
+                partaTel: '15218801056'
+            }
         }
     },
     methods: {
         async InitData () {
+            this.payId = this.$route.query.payId
             const formData = new FormData()
-            formData.append('payId', this.$store.state.payId)
+            formData.append('payId', this.payId)
             const { data: result } = await this.$http({
                 method: 'post',
                 url: '/api/api/busPayDetailController/selectByPrimaryKey',
                 data: formData,
                 headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
+                'Content-Type': 'multipart/form-data',
+                },
             })
             this.InitMsg = result.data
+            this.InitMsg.voucher = this.InitMsg.voucher.split(',')
         },
         RejectCheck () {
             if (!this.SubmitApproveData.checkReason) return this.$message.error('请先填写审核原因')
@@ -93,13 +93,29 @@ export default {
         async PassCheck () {
             await this.UpdateCheckStatus('9')
             await this.UpdatePayStatus('2')
+            // 调用合同盖章及发票
+            console.log(this.AddSealData)
+            const AddSealFormData = new FormData()
+            for (const key in this.AddSealData) {
+                AddSealFormData.append(key, this.AddSealData[key])
+            }
+            await this.$http({
+                method: 'post',
+                url: '/api/wordConversion/fillInWordAndSaveAsSpecifyPayment',
+                data: AddSealFormData,
+                headers: {
+                'Content-Type': 'multipart/form-data',
+                }
+            })
             await this.UpdateReportStage()
+            this.$message.success('数据提交成功')
+            this.$router.push({path: '/AssetInformation'})
         },
         // 提交审批状态
         async UpdateCheckStatus (status) {
             const formData = new FormData()
             this.SubmitApproveData.status = status
-            this.SubmitApproveData.propertId = this.$store.state.propertId
+            this.SubmitApproveData.propertId = this.$route.query.propertId
             console.log(this.SubmitApproveData)
             for (const key in this.SubmitApproveData) {
                 formData.append(key, this.SubmitApproveData[key])
@@ -123,7 +139,7 @@ export default {
                 payId: ''
             }
             UpdatePay.status = status
-            UpdatePay.payId = this.$store.state.payId
+            UpdatePay.payId = this.$route.query.payId
             for (const key in UpdatePay) {
                 formData.append(key, UpdatePay[key])
             }
@@ -140,7 +156,7 @@ export default {
             // 根据报备ID提交报备状态
             const StageformData = new FormData()
             StageformData.append('stage', '5')
-            StageformData.append('reportId', this.$store.state.reportId)
+            StageformData.append('reportId', this.$route.query.reportId)
             const { data: StageResult } = await this.$http({
                 method: 'post',
                 url: '/api/api/busReportController/updateDebtStage',

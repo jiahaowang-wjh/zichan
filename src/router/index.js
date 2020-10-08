@@ -74,7 +74,7 @@ const routes = [
                  component: () => import('@/views/MyDebt/Assignment'),
                  meta: {
                    leftMenu: '/Assignment'
-                 }
+                }
                },
                 {
               path: '/ConfirmAssignment',
@@ -84,7 +84,6 @@ const routes = [
                 leftMenu: '/ConfirmAssignment'
               }
             },
-
              {
                path: '/Notification',
                name: 'Notification',
@@ -132,7 +131,16 @@ const routes = [
                  meta: {
                    leftMenu: '/DebtConfirm'
                  }
-               }, {
+               },
+               {
+                path: '/SalesAgreement',
+                name: 'SalesAgreement',
+                component: () => import('@/views/MyDebt/SalesAgreement'),
+                meta: {
+                  leftMenu: '/SalesAgreement'
+                }
+                }, 
+                {
                  path: '/ReportInfo',
                  name: 'ReportInfo',
                  component: () => import('@/views/myapproval/ReportInfo'),
@@ -204,9 +212,7 @@ const routes = [
                  meta: {
                    leftMenu: '/PaymentApprove'
                  }
-               }, 
-               
-             
+               }
         ]
     }
 ]

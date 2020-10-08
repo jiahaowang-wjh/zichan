@@ -40,15 +40,15 @@
                     <span>{{item.reportNo}}</span>
                     <span>{{item.payertName}}</span>
                     <span>{{item.contractName}}</span>
-                    <span>{{item.payType}}</span>
+                    <span>{{item.payType === '1' ? '录入缴费' : item.payType === '3' ? '债权处理缴费' : item.payType === '4' ? '资产缴费' : '' }}</span>
                     <span>{{item.payNo}}</span>
                     <span>{{item.cost}}</span>
                     <span>
                         <img :src="ImgItem" v-for='(ImgItem,Imgindex) in item.voucher' :key='Imgindex' alt="">
                     </span>
-                    <span>{{item.status}}</span>
+                    <span>{{item.status === '0' ? '缴费信息未审核' : item.status === '1' ? '缴费信息审核未通过' : item.status === '2' ? '缴费审核通过' : '' }}</span>
                     <span>
-                        <button @click='PaymentCheck(index)' v-show="item.status === '0'">缴费审核</button>
+                        <button @click='PaymentCheck(index, item)' v-show="item.status === '0'">缴费审核</button>
                     </span>
                 </div>
             </div>
@@ -162,11 +162,8 @@ export default {
                 this.$emit('onChangeFragment', 'UnlockPaymentApprove')
             }
         },
-        PaymentCheck (index) {
-            this.$store.commit('AlterReportId', this.PaymentMsg[index].reportId)
-            this.$store.commit('AlterPayId', this.PaymentMsg[index].payId)
-            this.$store.commit('AlterPropertId', this.PaymentMsg[index].propertId)
-            this.$emit('onChangeFragment', 'PaymentApprove')
+        PaymentCheck (index, item) {
+            this.$router.push({path: '/PaymentApprove', query: {reportId: item.reportId, propertId: item.propertId, payId: item.payId}})
         }
     },
     created () {
@@ -270,7 +267,7 @@ export default {
                     line-height: px2rem(8);
                     font-size: px2rem(3.2);
                     background-color: #616789;
-                    flex: 3;
+                    flex: 3.5;
                     text-align: center;
                     color:#fff;
                     border: 1px solid #fff;
@@ -283,20 +280,20 @@ export default {
                     flex: 4;
                 }
                 :nth-child(8) {
-                    flex: 7;
+                    flex: 6;
                 }
             }
 
             &-tab {
                 display: flex;
                 flex-direction: column;
-                font-size: px2rem(3);
+                font-size: px2rem(2.5);
                 div:nth-child(odd) {
                     display: flex;
                     height: px2rem(12);
                     line-height: px2rem(12);
                     span {
-                        flex:3;
+                        flex:3.5;
                         text-align: center;
                         color:#272A39;
                         display: inline-block;
@@ -306,7 +303,7 @@ export default {
                         flex: 1;
                     }
                     :nth-child(8) {
-                        flex: 7;
+                        flex: 6;
                         margin-top: px2rem(1);
                     }
                     :nth-child(2),:nth-child(6) {
@@ -336,7 +333,7 @@ export default {
                     line-height: px2rem(12);
                     background-color: #E0E3F8;
                     span {
-                        flex:3;
+                        flex:3.5;
                         text-align: center;
                         color:#272A39;
                         display: inline-block;
@@ -346,7 +343,7 @@ export default {
                         flex: 1;
                     }
                     :nth-child(8) {
-                        flex: 7;
+                        flex: 6;
                         margin-top: px2rem(1);
                     }
                     :nth-child(2),:nth-child(6) {

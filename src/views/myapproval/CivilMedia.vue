@@ -101,7 +101,9 @@ export default {
                 pageNum: '1',
                 status: '1',
                 beginDate: '',
-                endDate: ''
+                endDate: '',
+                companyType: window.sessionStorage.getItem('companyType'),
+                comId: window.sessionStorage.getItem('companyId')
             },
             // 调解信息列表数据源
             MediateMsg: [],
@@ -161,8 +163,8 @@ export default {
         },
         async InitCiviMedia () {
             const formData = new FormData()
-            for (const key in this.MediaSearchSrc) {
-                formData.append(key, this.MediaSearchSrc[key])
+            for (const key in this.SearchData) {
+                formData.append(key, this.SearchData[key])
             }
             const { data: result } = await this.$http({
                 method: 'post',

@@ -131,38 +131,41 @@
               </span>
             </div>
             <span>
-              <button v-show="item.status === '0'" @click="GoAssess(index)">
-                资产评估
+              <button v-show="item.status === '0'" @click="GoAssess(index, item)"> 资产评估
               </button>
-              <button
-                v-show="item.status === '3' && item.stage === '1'"
-                @click="EnterContract(index)"
-              >
+              <!-- 进入录入合同---2.债权转让协议 -->
+              <button v-show="item.status === '3' && item.stage === '1'" @click="EnterContract(index, item)">
                 录入合同
               </button>
-              <!-- <button v-if="item.stage === '2'" @click='GoConfirmAssignment(index)'>债权转让确认书</button>
-                            this.$emit('onChangeFragment', 'ConfirmAssignment')
-                            <button v-if="item.stage === '3'" @click='EnterContract(index)'>录入合同</button>
-                            <button v-if="item.stage === '4'" @click='EnterContract(index)'>录入合同</button>
-                            <button v-if="item.stage === '5'" @click='EnterContract(index)'>录入合同</button>
-                            <button v-if="item.stage === '6'" @click='EnterContract(index)'>录入合同</button>
-                            <button v-if="item.stage === '7'" @click='EnterContract(index)'>录入合同</button> -->
+              <!-- 重新进入---3.债权转让确认书 -->
+              <button v-show="item.status === '3' && item.stage === '2'" @click="EnterConfirmAssignment(index, item)">
+                债权转让确认书
+              </button>
+              <!-- 重新进入---4.债权确认书 -->
+              <button v-show="item.status === '3' && item.stage === '3'" @click="EnterDebtConfirm(index, item)">
+                债权确认书
+              </button>
+              <!-- 重新进入---5.债权转让通知书 -->
+              <button v-show="item.status === '3' && item.stage === '4'" @click="EnterNotification(index, item)">
+                债权转让通知书
+              </button>
+              <!-- 重新进入---6.委托线上代理销售合同 || 销售合同 -->
+              <button v-show="item.status === '3' && item.stage === '5' && item.debtType !== '1'" @click="EnterSalesAgreement(index, item)">
+                销售合同
+              </button>
+              <!-- 重新进入---7.催款函 -->
+              <button v-show="(item.status === '3' && item.stage === '6' && item.debtType !== '1') || (item.status === '3' && item.stage === '5' && item.debtType === '1')" @click="EnterCollectionLetters(index, item)">
+                催款函
+              </button>
+              <!-- 重新进入---8.和解协议 -->
+              <button v-show="(item.status === '3' && item.stage === '7' && item.debtType !== '1') || (item.status === '3' && item.stage === '6' && item.debtType === '1')" @click="EnterCompromise(index, item)">
+                和解协议
+              </button>
               <button v-show="item.status === '2' || item.status === '4'">
                 查看
               </button>
-              <button
-                v-show="
-                  (item.stage === '4' && item.status === '1') ||
-                  item.status === '4' ||
-                  item.status === '7'
-                "
-              >
-                编辑
-              </button>
-              <button
-                @click="dialogTableVisible = true"
-                v-show="item.status === '5'"
-              >
+              <button v-show=" (item.stage === '4' && item.status === '1') || item.status === '4' || item.status === '7'"> 编辑</button>
+              <button @click="dialogTableVisible = true" v-show="item.status === '5'">
                 下载
               </button>
             </span>
@@ -232,7 +235,7 @@ export default {
       },
       //表格查询
       tableQuery: {
-        companyType: "1",
+        companyType: window.sessionStorage.getItem('companyType'),
         // 审核状态
         AuditState: "",
         // 选择相对人
@@ -240,7 +243,8 @@ export default {
         // 录入编号
         ReportNum: "",
         TimeStart: "",
-        TimeEnd: "2020-04-28",
+        TimeEnd: "",
+        comId: window.sessionStorage.getItem('companyId')
       },
       pickerOptions: {
         disabledDate(time) {
@@ -334,42 +338,47 @@ export default {
       });
       item.isSelect = true;
     },
-    SelectRelative() {
-      // window.sessionStorage.setItem('reportId', this.MyDebtMsg[index].reportId)
-      this.$emit("onChangeFragment", "ExamineReportForm");
-    },
     CloseSelectRelative() {
       this.IsShowRelativePage = false;
     },
     // 资产评估
-    GoAssess(index) {
-      window.sessionStorage.setItem(
-        "relativePerId",
-        this.MyDebtMsg[index].relativePerId
-      );
-      window.sessionStorage.setItem(
-        "propertId",
-        this.MyDebtMsg[index].propertId
-      );
-      this.$emit("onChangeFragment", "Assess");
+    GoAssess(index,item) {
+      this.$router.push({path: '/Assess', query: {propertId: item.propertId, relativePerId: item.relativePerId}})
     },
-    // 录入合同
-    EnterContract(index) {
-      window.sessionStorage.setItem(
-        "relativePerId",
-        this.MyDebtMsg[index].relativePerId
-      );
-      window.sessionStorage.setItem(
-        "propertId",
-        this.MyDebtMsg[index].propertId
-      );
-      this.$emit("onChangeFragment", "Assignment");
+    // <!-- 进入录入合同---2.债权转让协议 -->
+    EnterContract(index, item) {
+        this.$router.push({path: '/Assignment', query: {propertId: item.propertId, relativePerId: item.relativePerId, debtType: item.debtType}})
     },
-
+    // <!-- 重新进入---3.债权转让确认书 -->
+    EnterConfirmAssignment(index, item) {
+        this.$router.push({path: '/ConfirmAssignment', query: {propertId: item.propertId, relativePerId: item.relativePerId, debtType: item.debtType}})
+    },
+    // <!-- 重新进入---4.债权确认书 -->
+    EnterDebtConfirm(index, item) {
+        this.$router.push({path: '/DebtConfirm', query: {propertId: item.propertId, relativePerId: item.relativePerId, debtType: this.debtType}})
+    },
+    // <!-- 重新进入---5.债权转让通知书 -->
+    EnterNotification(index, item) {
+        this.$router.push({path: '/Notification', query: {propertId: item.propertId, relativePerId: item.relativePerId, debtType: this.debtType}})
+    },
+    // <!-- 重新进入---6.委托线上代理销售合同 -->
+    EnterSalesAgreement(index, item) {
+        this.$router.push({path: '/SalesAgreement', query: {propertId: item.propertId, relativePerId: item.relativePerId, debtType: item.debtType}})
+    },
+    // <!-- 重新进入---7.催款函 -->
+    EnterCollectionLetters(index, item) {
+        this.$router.push({path: '/CollectionLetters', query: {propertId: item.propertId, relativePerId: item.relativePerId, debtType: item.debtType}})
+    },
+    // <!-- 重新进入---8.和解协议 -->
+    EnterCompromise(index, item) {
+        this.$router.push({path: '/Compromise', query: {propertId: item.propertId, relativePerId: item.relativePerId, debtType: item.debtType}})
+    },
+    // 重新进入
     // 搜索表格数据
     async searchTbaleData(page) {
       this.tablePage.pageNum = page || 1;
       const queryData = Object.assign(this.tableQuery, this.tablePage);
+      console.log(queryData)
       const formData = new FormData();
       for (const key in queryData) {
         formData.append(key, queryData[key]);
@@ -382,8 +391,8 @@ export default {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(result);
-      this.MyDebtMsg = result.data.list;
+      console.log(result.data.data);
+      this.MyDebtMsg = result.data.data.list;
     },
   },
   created() {

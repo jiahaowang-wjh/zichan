@@ -1,121 +1,136 @@
 <!--  -->
 <template>
-    <div class='promise'>
-        <div class='promise-title'>
-            <span class='promise-title-go1'>我的审批</span>
-            <span class='promise-title-separator'> / </span>
-            <span class='promise-title-go2'>和解协议 </span>
+    <div class='compromise'>
+        <div class='compromise-title'>
+            <span class='compromise-title-go1'>我的审批</span>
+            <span class='compromise-title-separator'> / </span>
+            <span class='compromise-title-go2'>和解协议 </span>
         </div>
-        <div class='promise-content'>
-            <div class='promise-content-progress-map'>
-                <div class='promise-content-progress-map-finished'>
+        <div class='compromise-content'>
+            <div class='compromise-content-progress-map'>
+                <div class='compromise-content-progress-map-finished'>
                     <span></span>
                     1.资产评估
                 </div>
-                <div class='promise-content-progress-map-finished'>
+                <div class='compromise-content-progress-map-finished'>
                     <span></span>
                     2.债权转让协议
                 </div>
-                <div class='promise-content-progress-map-finished'>
+                <div class='compromise-content-progress-map-finished'>
                     <span></span>
                     3.债权转让确认书
                 </div>
-                <div class='promise-content-progress-map-finished'>
+                <div class='compromise-content-progress-map-finished'>
                     <span></span>
                     4.债权确认书
                 </div>
-                <div class='promise-content-progress-map-finished'>
+                <div class='compromise-content-progress-map-finished'>
                     <span></span>
                     5.债权转让通知书
                 </div>
-                <div class='promise-content-progress-map-finished'>
-                    <span></span>
-                    6.委托代理销售合同
-                </div>
-                <div class='promise-content-progress-map-finished'>
-                    <span></span>
-                    7.催款函
-                </div>
-                <div class='promise-content-progress-map-highlight'>
-                    <span></span>
-                    8.和解协议
-                </div>
+                <template v-if="debtType === '1'">
+                    <div class='compromise-content-progress-map-finished'>
+                        <span></span>
+                        6.催款函
+                    </div>
+                    <div class='compromise-content-progress-map-highlight'>
+                        <span></span>
+                        7.和解协议
+                    </div>
+                </template>
+                <template v-else>
+                    <div class='compromise-content-progress-map-finished'>
+                        <span></span>
+                        {{debtType === '2' ? '6.委托代理销售合同' : '6.委托线上代理销售合同'}}
+                    </div>
+                    <div class='compromise-content-progress-map-finished'>
+                        <span></span>
+                        7.催款函
+                    </div>
+                    <div class='compromise-content-progress-map-highlight'>
+                        <span></span>
+                        8.和解协议
+                    </div>
+                </template>
             </div>
             <!-- 背景横线 -->
-            <div class='promise-content-crossing'></div>
-            <div class='promise-content-main'>
-                <div class='promise-content-main-title'>
+            <div class='compromise-content-crossing'></div>
+            <div class='compromise-content-main'>
+                <div class='compromise-content-main-title'>
                     和解协议
                 </div>
-                <div class='promise-content-main-text'>
+                <div class='compromise-content-main-text'>
+                    合同编号：<el-input :disabled='true' type="text" :value='InitMsg.compromiseAgreementNo' style='width: 300px'></el-input><br/>
                     甲方：深圳金瑞盈通资产管理有限公司<br>
                 </div>
-                <div style='margin: 4px 0' class='promise-content-main-form-top'>
-                    <span style='width: 100px'>
+                <div style='margin: 4px 0' class='compromise-content-main-form-top'>
+                    <span>
                         乙方(委托方):
                     </span>
-                    <input type="text" :value='InitMsg.personName'>
+                    <el-input :disabled='true' type="text" :value='InitMsg.personName'></el-input>
                 </div>
-                <div class='promise-content-main-text'>
+                <div class='compromise-content-main-text'>
                     鉴于：<br>
-                    原债权人 <input type="text" :value='InitMsg.debtName'>与甲方签订《债权转让协议》，将原债权人<input type="text" :value='InitMsg.debtName'>享有的债权(债权金额为人民币<input type="text" :value='InitMsg.amountThis'>元）及全部相关权利和权益转让给甲方享有。甲乙双方一致确认上述债权转让,经友好协商就乙方向甲方偿还债务事项达成如下约定,以资共同遵守:<br>
-                    1.乙方应向甲方偿付的债务总金额为人民币 <input type="text" :value='InitMsg.amountThis'><br>
-                    2.乙方按照如下第
+                    原债权人 <el-input :disabled='true' type="text" :value='InitMsg.debtName'></el-input>与甲方签订《债权转让协议》，将其对乙方享有的债权及全部相关权利和权益转让给甲方。现甲乙双方经友好协商，就乙方向甲方偿还债务事项达成一致意见，特签订本协议，以资共同遵守。</br>
+                    一、乙方应向甲方偿付的债务总金额为人民币 <el-input :disabled='true' type="text" :value='InitMsg.amountThis'></el-input>元。<br>
+                    二、乙方按照如下第
                     <el-select v-model="SubmitData.partybMode" placeholder="请选择">
-                        <el-option label="第1种" :value="'1'"> </el-option>
-                        <el-option label="第2种" :value="'2'"> </el-option>
+                        <el-option label="第1种: 一次性现金还款" :value="'1'"> </el-option>
+                        <el-option label="第2种: 分期现金还款" :value="'2'"> </el-option>
+                        <el-option label="第3种: 代物清偿" :value="'3'"> </el-option>
+                        <el-option label="第4种: 其他偿还方式" :value="'4'"> </el-option>
                     </el-select>
-                    项方式清偿债务:<br>
-                    (1)一次性现金还款:自双方签署本和解协议之日起【 30  】日内,乙方向甲方一次性支付现金人民币<input type="text" v-model='SubmitData.cash'>元。<br>
-                    (2)分期现金还款:采用分<input type="text" v-model='SubmitData.StagingNumber'>期向甲方支付,每期支付人民币<input type="text" v-model='SubmitData.money'>元,每期还款日为每月<input type="text" v-model='SubmitData.days'>日。<br>
-                    (3)与转让债权同等价资产抵押<br>
-                    (4)与转让债权同等价值商品<br>
-                    (5)从业绩佣金处扣除同等债权金额（或带给公司债权部分20倍的业绩）<br>
-                    3.甲方指定如下银行账户为收款账户。<br>
-                    户名：深圳金瑞盈通资产管理有限公司<br>
-                    开户行：中国农业银行深圳横岗新区支行<br>
-                    账号：41027000040036419<br>
-                    4.如乙方未按照本协议约定还款,产生逾期的,自逾期之日起,按照应付未付金额的每日万分之五向甲方支付违约金。<br>
-                    5.甲乙双方如发生争议,应当友好协商解决,协商不成的双方同意向甲方住所地人民法院提起诉讼。<br>
-                    6.本协议自双方签章之日起生效。本协议壹式叁份,甲方留存贰份,乙方留存壹份,具有同等法律效力。<br>
-                    7.其他约定事项:无<br>
+                    项方式清偿债务：<br>
+                    （一）一次性现金还款：自双方签署本和解协议之日起30日内,乙方向甲方一次性支付现金人民币<el-input :disabled='true' type="text" v-model='InitMsg.amountThis'></el-input>元。<br>
+                    （二）分期现金还款：采用分12期向甲方支付,每期支付人民币<el-input :disabled='true' type="text" v-model='InitMsg.average'></el-input>元，每期还款日为每月<el-input :disabled='true' type="text" v-model='InitMsg.day' style='width: 100px'></el-input>日。<br>
+                    （三）代物清偿：用与债务金额同等价值的货物进行清偿。<br>
+                    （四）其他偿还方式。<br>
+                    三、甲方指定如下银行账户为收款账户。<br>
+                    户  名：深圳市金隆盛投资管理有限公司<br>
+                    开户行：中国银行股份有限公司深圳南油支行<br>
+                    账  号 ：745868704479<br>
+                    四、如乙方未按照本协议约定还款产生逾期的，自逾期之日起，按照应付未付金额的每日万分之五向甲方支付违约金。<br>
+                    五、甲乙双方因本协议发生争议，应当友好协商解决；协商不成的可向本协议签订地人民法院起诉。<br>
+                    六、本协议自甲乙双方签字或盖章后生效。本协议壹式叁份,甲方留存贰份,乙方留存壹份,具有同等法律效力。<br>
                 </div>
-                <div class='promise-content-main-container'>
-                    <!-- 左侧签字盖章 -->
-                    <div  class='promise-content-main-container-item'>
-                        <div>
-                            <span>法定代表履权代表(签字): </span>
-                            <input type="text" v-model='SubmitData.partyaSubrogation'>
-                        </div>
-                        <div>
-                            <span>甲方(盖章): </span>
-                            <button>上传电子章</button>
-                        </div>
-                        <div>
-                            <span>日期: </span>
-                            <input type="text" v-model='SubmitData.partyaDate'>
-                        </div>
-                    </div>
-                    <div class='promise-content-main-container-item'>
-                    <!-- 右侧签字盖章 -->
-                        <div>
-                            <span>法定代表履权代表(签字)</span>
-                            <input type="text" v-model='SubmitData.partybSubrogation'>
-                        </div>
-                        <div>
-                            <span>乙方(盖章): </span>
-                            <button>上传电子章</button>
-                        </div>
-                        <div>
-                            <span>日期: </span>
-                            <input type="text" v-model='SubmitData.partybDate'>
-                        </div>
-                        <div>
-                            <span>合同签约地:广东深圳</span>
-                        </div>
-                    </div>
+                <div style='text-align: center'>(以下无正文,为签署页)</div>
+                <div style='margin-top: 80px'>
+                    <el-row :gutter="24">
+                        <el-col :span="6">
+                            <span class='col-label'>甲方：</span>
+                            <el-input :disabled='true' type="text" :value="'深圳金瑞盈通资产管理有限公司'"></el-input>
+                        </el-col>
+                        <el-col :span="3">
+                            <span class='col-label'></span>
+                        </el-col>
+                        <el-col :span="6">
+                            <span class='col-label'>乙方：</span>
+                            <el-input :disabled='true' type="text" :value='InitMsg.personName'></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="24">
+                        <el-col :span="6">
+                            <span class='col-label'>日期：</span>
+                            <el-input :disabled='true' type="text" :value='InitMsg.contractDate'></el-input>
+                        </el-col>
+                        <el-col :span="3">
+                            <span class='col-label'></span>
+                        </el-col>
+                        <el-col :span="6">
+                            <span class='col-label'>日期：</span>
+                            <el-input :disabled='true' type="text" :value='InitMsg.contractDate'></el-input>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="24">
+                        <el-col :span="9">
+                            <span class='col-label'></span>
+                        </el-col>
+                        <el-col :span="6">
+                            <span class='col-label'>协议签约地：重庆市渝中区</span>
+                        </el-col>
+                    </el-row>
                 </div>
-                <div class='promise-content-main-button'>
+                <div class='compromise-content-main-button'>
                     <button @click='Submit'>提交</button>
                 </div>
             </div>
@@ -129,28 +144,20 @@ export default {
         return {
             InitMsg: {},
             SubmitData: {
-                // 全款
-                propertId: '',
+                propertId: this.$route.query.propertId,
                 partybMode: '',
-                cash: '',
-                partyaSubrogation: '',
-                partyaDate: '',
-                partyaSeal: '111',
-                partybSeal: '222',
-                partybSubrogation: '',
-                partybDate: '',
-                // 分期数据
-                StagingNumber: '',
-                money: '',
-                days: ''
-            }
+                comId: '',
+                contractDate: ''
+            },
+            debtType: ''
         }
     },
     methods: {
         async InitData () {
-            const relativePerId = window.sessionStorage.getItem('relativePerId')
             const formData = new FormData()
-            formData.append('relativePerId', relativePerId)
+            formData.append('relativePerId', this.$route.query.relativePerId)
+            formData.append('propertId', this.$route.query.propertId)
+            formData.append('comId', window.sessionStorage.getItem('companyId'))
             const { data: result } = await this.$http({
                 method: 'post',
                 url: '/api/api/busCompromiseAgreementController/initialize',
@@ -160,39 +167,29 @@ export default {
                 }
             })
             this.InitMsg = result.data
+            console.log(this.InitMsg)
+            this.debtType = this.$route.query.debtType
         },
         async Submit () {
-            this.SubmitData.propertId = window.sessionStorage.getItem('propertId')
+            this.SubmitData.comId = window.sessionStorage.getItem('companyId')
+            this.SubmitData.contractDate = this.InitMsg.contractDate
+            this.SubmitData.compromiseAgreementNo = this.InitMsg.compromiseAgreementNo
             const formData = new FormData()
             for (const key in this.SubmitData) {
                 formData.append(key, this.SubmitData[key])
             }
-            let FinalResult = {}
-            if (this.SubmitData.partybMode === '1') {
-                const { data: AllResult } = await this.$http({
-                    method: 'post',
-                    url: '/api/api/busCompromiseAgreementController/insertSelectiveManner1',
-                    data: formData,
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                FinalResult = AllResult
-            } else {
-                const { data: PartResult } = await this.$http({
-                    method: 'post',
-                    url: '/api/api/busCompromiseAgreementController/insertSelectiveManner2',
-                    data: formData,
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                FinalResult = PartResult
-            }
-            if (FinalResult.resultCode !== '200') return this.$message.error(FinalResult.resultMessage)
+            const { data: AllResult } = await this.$http({
+                method: 'post',
+                url: '/api/api/busCompromiseAgreementController/insertSelectiveManner1',
+                data: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            console.log(AllResult.resultCode)
             // 更新资产信息自身阶段
             const PropertFormData = new FormData()
-            PropertFormData.append('propertId', window.sessionStorage.getItem('propertId'))
+            PropertFormData.append('propertId', this.$route.query.propertId)
             PropertFormData.append('stage', '8')
             const { data: PropertStatusResult } = await this.$http({
                 method: 'post',
@@ -205,7 +202,7 @@ export default {
             if (PropertStatusResult.resultCode !== '200') return this.$message.error('更改资产阶段失败, 请重试')
 
             const StatusformData = new FormData()
-            StatusformData.append('propertId', window.sessionStorage.getItem('propertId'))
+            StatusformData.append('propertId', this.$route.query.propertId)
             StatusformData.append('status', '4')
             const { data: StatusResult } = await this.$http({
                 method: 'post',
@@ -216,7 +213,8 @@ export default {
                 }
             })
             if (StatusResult.resultCode !== '200') return this.$message.error('修改资产状态失败, 请重试')
-            this.$emit('onChangeFragment', 'MyDebt')
+            this.$message.success('提交成功')
+            this.$router.push({path: '/MyDebt'})
         }
     },
     created () {
@@ -227,7 +225,36 @@ export default {
 </script>
 <style lang='scss' scoped>
 @import '@css/style.scss';
-.promise {
+.el-input {
+    width: 200px;
+}
+.el-row {
+  .el-col {
+    display: flex;
+    padding: 0 20px;
+    margin: 5px 0;
+    input {
+        width: 100%;
+        height: 30px;
+    }
+    .col-label {
+      flex-shrink: 0;
+      line-height: 30px;
+      height: 30px;
+      margin-right: 10px;
+    }
+    .el-select {
+    width: 100%;
+    }
+    .el-input {
+    width: 100%;
+    }
+    .el-date-editor {
+    width: 100%;
+    }
+  }
+}
+.compromise {
     display: flex;
     flex-direction: column;
     background-color: #E9F0F5;
@@ -317,7 +344,8 @@ export default {
                 width: px2rem(16);
             }
             &-text {
-                line-height: px2rem(6);
+                line-height: 45px;
+                font-size: 16px;
             }
             &-last-text {
                 margin: px2rem(8)
@@ -338,7 +366,7 @@ export default {
                 display: inline-block;
             }
             &-form-top {
-                margin: px2rem(6) 0!important;
+                margin: 10px 0!important;
             }
             &-form-bottom {
                 margin-bottom: px2rem(3)!important;

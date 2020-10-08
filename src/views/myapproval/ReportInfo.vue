@@ -138,7 +138,9 @@ export default {
                 beginDate: '',
                 endDate: '',
                 debtName: '',
-                status: ''
+                status: '',
+                companyType: window.sessionStorage.getItem('companyType'),
+                comId: window.sessionStorage.getItem('companyId')
             },
             SelectOption: [
                 {
@@ -180,12 +182,8 @@ export default {
         // 页面初始化
         async InitData () {
             const formData = new FormData()
-            const DataList = {
-                pageSize: '20',
-                pageNum: '1'
-            }
-            for (const key in DataList) {
-                formData.append(key, DataList[key])
+            for (const key in this.SearchForm) {
+                formData.append(key, this.SearchForm[key])
             }
             const { data: result } = await this.$http({
                 method: 'post',

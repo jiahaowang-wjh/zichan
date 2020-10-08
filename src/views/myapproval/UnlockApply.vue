@@ -91,10 +91,6 @@ export default {
             ],
             // 确定选用正常模板还是多选模板
             isNormal: false,
-            TimeSelect: {
-                TimeStart: '2020-02-30',
-                TimeEnd: '2020-04-28'
-            },
             pickerOptions: {
                 disabledDate (time) {
                     return time.getTime() > Date.now()
@@ -124,7 +120,9 @@ export default {
                 pageNum: '1',
                 pageSize: '10',
                 debtNo: '',
-                debtId: ''
+                debtId: '',
+                companyType: window.sessionStorage.getItem('companyType'),
+                comId: window.sessionStorage.getItem('companyId')
             }
         }
     },
@@ -137,7 +135,6 @@ export default {
         },
         async InitUnlockApply () {
             const formData = new FormData()
-            formData.append('companyType', window.sessionStorage.getItem('companyType'))
             for (const key in this.UnlockSearchSrc) {
                 formData.append(key, this.UnlockSearchSrc[key])
             }

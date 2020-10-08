@@ -15,7 +15,6 @@ function filterRouteData(menuArr) {
         }
 
     })
-    console.log(parentArr)
     childArr.forEach(item => {
         const pIndex = parentArr.findIndex(obj => item.prantId === obj.menuId);
         if (pIndex != -1) {
@@ -63,10 +62,9 @@ export default {
                 'Content-Type': 'multipart/form-data'
             }
         })
-        console.log(data);
+        console.log(data)
         if (data) {
             const menuTree = filterRouteData(data.data);
-            console.log(menuTree);
             commit('SAVE_USER_MENU', data.data);
             commit('SAVE_USER_MENU_TREE', menuTree);
 

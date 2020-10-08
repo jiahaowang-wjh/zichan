@@ -81,7 +81,7 @@ export default {
       AsideSubActiveIndex: 0,
       AsideListContent: [],
       currentComponent: "MyDebt",
-      userName: "用户名或身份",
+      userName: "",
     };
   },
   computed: {
@@ -99,13 +99,12 @@ export default {
 
   mounted() {
     this.currentRoute = this.$route.meta.leftMenu;
-    console.log(this.userMenuTree);
   },
 
   methods: {
     initData() {
       // 初始化头像和用户信息
-      const username = localStorage.getItem("username");
+      const username = window.sessionStorage.getItem('userName')
       this.userName = username;
     },
   },
