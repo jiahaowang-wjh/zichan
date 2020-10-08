@@ -131,40 +131,40 @@
               </span>
             </div>
             <span>
-              <button v-show="item.status === '0'" @click="GoAssess(index, item)"> 资产评估
+              <button v-show="item.status === '0' && roleId === '7994113497085001728'" @click="GoAssess(index, item)"> 资产评估
               </button>
               <!-- 进入录入合同---2.债权转让协议 -->
-              <button v-show="item.status === '3' && item.stage === '1'" @click="EnterContract(index, item)">
+              <button v-show="item.status === '3' && item.stage === '1' && roleId === '7994113497085001728'" @click="EnterContract(index, item)">
                 录入合同
               </button>
               <!-- 重新进入---3.债权转让确认书 -->
-              <button v-show="item.status === '3' && item.stage === '2'" @click="EnterConfirmAssignment(index, item)">
+              <button v-show="item.status === '3' && item.stage === '2' && roleId === '7994113497085001728'" @click="EnterConfirmAssignment(index, item)">
                 债权转让确认书
               </button>
               <!-- 重新进入---4.债权确认书 -->
-              <button v-show="item.status === '3' && item.stage === '3'" @click="EnterDebtConfirm(index, item)">
+              <button v-show="item.status === '3' && item.stage === '3' && roleId === '7994113497085001728'" @click="EnterDebtConfirm(index, item)">
                 债权确认书
               </button>
               <!-- 重新进入---5.债权转让通知书 -->
-              <button v-show="item.status === '3' && item.stage === '4'" @click="EnterNotification(index, item)">
+              <button v-show="item.status === '3' && item.stage === '4' && roleId === '7994113497085001728'" @click="EnterNotification(index, item)">
                 债权转让通知书
               </button>
               <!-- 重新进入---6.委托线上代理销售合同 || 销售合同 -->
-              <button v-show="item.status === '3' && item.stage === '5' && item.debtType !== '1'" @click="EnterSalesAgreement(index, item)">
+              <button v-show="item.status === '3' && item.stage === '5' && item.debtType !== '1' && roleId === '7994113497085001728'" @click="EnterSalesAgreement(index, item)">
                 销售合同
               </button>
               <!-- 重新进入---7.催款函 -->
-              <button v-show="(item.status === '3' && item.stage === '6' && item.debtType !== '1') || (item.status === '3' && item.stage === '5' && item.debtType === '1')" @click="EnterCollectionLetters(index, item)">
+              <button v-show="(item.status === '3' && item.stage === '6' && item.debtType !== '1') || (item.status === '3' && item.stage === '5' && item.debtType === '1') && roleId === '7994113497085001728'" @click="EnterCollectionLetters(index, item)">
                 催款函
               </button>
               <!-- 重新进入---8.和解协议 -->
-              <button v-show="(item.status === '3' && item.stage === '7' && item.debtType !== '1') || (item.status === '3' && item.stage === '6' && item.debtType === '1')" @click="EnterCompromise(index, item)">
+              <button v-show="(item.status === '3' && item.stage === '7' && item.debtType !== '1') || (item.status === '3' && item.stage === '6' && item.debtType === '1') && roleId === '7994113497085001728'" @click="EnterCompromise(index, item)">
                 和解协议
               </button>
               <button v-show="item.status === '2' || item.status === '4'">
                 查看
               </button>
-              <button v-show=" (item.stage === '4' && item.status === '1') || item.status === '4' || item.status === '7'"> 编辑</button>
+              <button v-show=" (item.stage === '4' && item.status === '1') || item.status === '4' || item.status === '7' && roleId === '7994113497085001728'" > 编辑</button>
               <button @click="dialogTableVisible = true" v-show="item.status === '5'">
                 下载
               </button>
