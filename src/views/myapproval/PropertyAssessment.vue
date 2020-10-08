@@ -65,6 +65,7 @@ export default {
             queryInfo: {
                 pageSize: 10
             },
+            roleId: window.sessionStorage.getItem('roleId'),
             // 选项卡
             SelectOption: [
                 {

@@ -221,6 +221,7 @@ export default {
           isSelect: false,
         },
       ],
+      roleId: window.sessionStorage.getItem('roleId'),
       // 调解信息列表数据源
       MyDebtMsg: [],
       // 确定选用正常模板还是多选模板
