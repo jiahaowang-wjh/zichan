@@ -139,7 +139,7 @@ export default {
         },
         // 资产缴费
         GoPayment (index, item) {
-            this.$router.push({path: '/Payment', query: {propertId: item.propertId, relativePerId: item.relativePerId}})
+            this.$router.push({path: '/Payment', query: {propertId: item.propertId, relativePerId: item.relativePerId,huoKuanMoney: item.huoKuanMoney}})
         }
     },
     created () {

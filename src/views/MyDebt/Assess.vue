@@ -14,7 +14,7 @@
                 </div>
                 <div>
                     <span></span>
-                    2.债权转让协议 
+                    2.债权转让协议
                 </div>
                 <div>
                     <span></span>
@@ -26,20 +26,33 @@
                 </div>
                 <div>
                     <span></span>
-                    5.委托寄卖合同
+                    5.债权转让通知书
                 </div>
-                <div>
-                    <span></span>
-                    6.委托代理销售合同
-                </div>
-                <div>
-                    <span></span>
-                    7.催款函
-                </div>
-                <div>
-                    <span></span>
-                    8.和解协议
-                </div>
+                <!-- 如果解债类型为depttype = 1,否则则显示下面的template  -->
+                <template v-if="debtType === '1'">
+                    <div>
+                        <span></span>
+                        6.催款函
+                    </div>
+                    <div>
+                        <span></span>
+                        7.和解协议
+                    </div>
+                </template>
+                <template v-else>
+                    <div>
+                        <span></span>
+                        {{debtType === '2' ? '6.委托代理销售合同' : '6.委托线上代理销售合同'}}
+                    </div>
+                    <div>
+                        <span></span>
+                        7.催款函
+                    </div>
+                    <div>
+                        <span></span>
+                        8.和解协议
+                    </div>
+                </template>
             </div>
             <!-- 背景横线 -->
             <div class='assess-content-crossing'></div>
@@ -81,17 +94,14 @@
                         <input type="text" :value='assessData.amountThis' :disabled='true'>
                     </span>
                 </div>
-                <div class='assess-content-main-row2'>
-                    <span class='assess-content-main-row2-title'>本次置换资产凭证</span>
-                    <span class='assess-content-main-row2-form'>
-                        <input type="text" placeholder="请输入" v-model='SubmitData.credentialsText'>
-                    </span>
-                </div>
                 <div class='assess-content-main-row2-update'>
-                    <div v-for='(item,index) in UpdateImgsSrcList' :key='index'>
-                        <button v-show='!item.HasData'>点击上传</button>
-                        <input v-show='!item.HasData' @change='UpdataImgs(index)' ref='VoucherList' type="file">
-                        <img v-if='item.HasData' alt="" :src='item.ImgSrc'>
+                    <span class='assess-content-main-row2-update-title'>本次置换资产凭证</span>
+                    <div class='assess-content-main-row2-update-imglist'>
+                        <img :src="item" v-for='(item,index) in SubmitData.credentials' :key='index' alt="">
+                    </div>
+                    <div class='assess-content-main-row2-update-button'>
+                        <el-button size='mini'>点击上传</el-button>
+                        <input type="file" @change='UpdataImgs' ref='VoucherList'>
                     </div>
                 </div>
                 <div class='assess-content-main-row2'>
@@ -121,54 +131,20 @@ export default {
     data () {
         return {
             assessData: {},
-            UpdateImgsSrcList: [
-                {
-                    ImgSrc: '',
-                    HasData: false
-                },
-                {
-                    ImgSrc: '',
-                    HasData: false
-                },
-                {
-                    ImgSrc: '',
-                    HasData: false
-                },
-                {
-                    ImgSrc: '',
-                    HasData: false
-                },
-                {
-                    ImgSrc: '',
-                    HasData: false
-                },
-                {
-                    ImgSrc: '',
-                    HasData: false
-                }
-            ],
             SubmitData: {
                 propertId: '',
-                credentials: '',
+                credentials: [],
                 card: '',
                 companyManag: '',
-                status: '0',
-                credentialsText: ''
-            }
+                status: '0'
+            },
+            debtType: this.$route.query.debtType
         }
     },
     methods: {
         async SubmitAssessMsg () {
             // 处理债事凭证的信息添加到上传信息中
-            const ImgsSrcList = []
-            this.UpdateImgsSrcList.map(v => {
-                if (v.HasData) {
-                    ImgsSrcList.push(v.ImgSrc)
-                }
-            })
-            this.SubmitData.credentials = ImgsSrcList
             this.SubmitData.propertId = this.$route.query.propertId
-            console.log(this.SubmitData)
             // 获取当前日期
             const date = new Date()
             const year = date.getFullYear()
@@ -238,11 +214,11 @@ export default {
             })
             this.assessData = result.data
         },
-        UpdataImgs (index) {
-            const file = this.$refs.VoucherList[index].files[0]
+        UpdataImgs () {
+            const file = this.$refs.VoucherList.files[0]
+            console.log(file)
             this.$UpdateFile(file).then(result => {
-                this.UpdateImgsSrcList[index].ImgSrc = result
-                this.UpdateImgsSrcList[index].HasData = true
+                this.SubmitData.credentials.push(result)
             })
         }
     },
@@ -337,6 +313,9 @@ export default {
                 display: flex;
                 align-items: center;
                 line-height: px2rem(12);
+                input {
+                    width: 90%;
+                }
                 span {
                     flex: 1;
                     display: inline-block;
@@ -393,30 +372,42 @@ export default {
                 }
                 &-update {
                     display: flex;
-                    height: px2rem(20);
-                    div {
+                    height: 90px;
+                    span {
+                        display: inline-block;
                         border: 1px solid #DFE0E7;
+                        text-align: center;
+                        flex: 1;
+                        background-color: #616789;
+                        color: #ffffff;
+                        line-height: 90px;
+                    }
+                    &-imglist {
+                        flex: 4.2;
+                        display: flex;
+                        align-items: center;
+                        img {
+                            width: 150px;
+                            height: 80px;
+                            margin: 0 10px;
+                        }
+                        border: 1px solid #E8EAEC;
+                    }
+                    &-button {
+                        position: relative;
+                        flex: 0.8;
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        flex: 1;
-                        position: relative;
-                        input[type=file] {
-                            width: px2rem(20);
-                            position: absolute;
+                        input[type='file'] {
+                            width: 100px;
                             opacity: 0;
+                            position: absolute;
                         }
-                        button {
+                        .el-button {
+                            width: 100px;
                             background-color: #616789;
-                            border: none;
                             color: #fff;
-                            font-size: px2rem(3.2);
-                            padding: px2rem(1) px2rem(3);
-                            border-radius: px2rem(1);
-                        }
-                        img {
-                            width: 80%;
-                            height: 95%;
                         }
                     }
                 }

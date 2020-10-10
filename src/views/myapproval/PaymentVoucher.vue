@@ -48,7 +48,7 @@
                     </span>
                     <span>{{item.status === '0' ? '缴费信息未审核' : item.status === '1' ? '缴费信息审核未通过' : item.status === '2' ? '缴费审核通过' : '' }}</span>
                     <span>
-                        <button @click='PaymentCheck(index, item)' v-show="item.status === '0'">缴费审核</button>
+                        <button @click='PaymentCheck(index, item)' v-show="item.status === '0' && item.payType === '4'">缴费审核</button>
                     </span>
                 </div>
             </div>
@@ -163,7 +163,7 @@ export default {
             }
         },
         PaymentCheck (index, item) {
-            this.$router.push({path: '/PaymentApprove', query: {reportId: item.reportId, propertId: item.propertId, payId: item.payId}})
+            this.$router.push({path: '/PaymentApprove', query: {reportId: item.reportId, propertId: item.propertId, payId: item.payId, cost: item.cost}})
         }
     },
     created () {

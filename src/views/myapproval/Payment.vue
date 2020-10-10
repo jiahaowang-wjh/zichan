@@ -12,7 +12,7 @@
             <div><input type="text" v-model='PamentMsg.CardNum' disabled='true'></div>
             <div><input type="text" v-model='PamentMsg.AccountName' disabled='true'></div>
             <div><input type="text" v-model='PamentMsg.OpeningBank' disabled='true'></div>
-            <div><input type="text" v-model='PamentMsg.FeePayable' disabled='true'></div>
+            <div><input type="text" :value="'应缴费用：' + PamentMsg.FeePayable+'元'" disabled='true'></div>
             <div class='payment-info-content-update'>
                 上传凭证：
                 <div class='payment-info-content-update-box'>
@@ -43,7 +43,7 @@ export default {
                 CardNum: '收款卡号：745868704479',
                 AccountName: '开户名：深圳市金隆盛投资管理有限公司',
                 OpeningBank: '开户行：中国银行股份有限公司深圳南油支行',
-                FeePayable: '应缴费用：=解债金额×10%或者解债金额×13%',
+                FeePayable: this.$route.query.huoKuanMoney,
                 Contractor: ''
             },
             SubmitData: {
@@ -51,7 +51,7 @@ export default {
                 contractName: '',
                 payertName: '',
                 voucher: [],
-                cost: '880',
+                cost: this.$route.query.huoKuanMoney,
                 flag: '4',
                 status: '0',
                 propertId: ''

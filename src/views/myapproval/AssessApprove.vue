@@ -81,15 +81,10 @@
                         <input type="text" :value='assessData.amountThis' :disabled='true'>
                     </span>
                 </div>
-                <div class='assess-content-main-row2'>
-                    <span class='assess-content-main-row2-title'>本次置换资产凭证</span>
-                    <span class='assess-content-main-row2-form'>
-                        <input type="text" :disabled='true' v-model='AssessMsg.credentialsText'>
-                    </span>
-                </div>
                 <div class='assess-content-main-row2-update'>
-                    <div v-for='(item,index) in UpdateImgsSrcList' :key='index'>
-                        <img :src='item' v-show="item ? item : ''">
+                    <span class='assess-content-main-row2-update-title'>本次置换资产凭证</span>
+                    <div class='assess-content-main-row2-update-imglist'>
+                        <img :src="item" v-for='(item,index) in AssessMsg.credentials' :key='index' alt="">
                     </div>
                 </div>
                 <div class='assess-content-main-row2'>
@@ -131,8 +126,7 @@ export default {
                 status: '',
                 checkReason: ''
             },
-            AssessMsg: {},
-            UpdateImgsSrcList: ['', '', '', '', '', '']
+            AssessMsg: {}
         }
     },
     methods: {
@@ -186,6 +180,7 @@ export default {
                 }
             })
             this.assessData = result.data
+            console.log(this.assessData)
             // 通过资产ID查询评估ID
             const AssetInformationFormData = new FormData()
             AssetInformationFormData.append('propertId', this.$route.query.propertId)
@@ -198,11 +193,8 @@ export default {
                 }
             })
             this.AssessMsg = AssetInformationResult.data
-            console.log(this.AssessMsg)
-            const length = this.AssessMsg.credentials.split(',').length
-            for (let i = 0; i < length; i++) {
-                this.UpdateImgsSrcList[i] = this.AssessMsg.credentials.split(',')[i]
-            }
+            console.log(this.AssessMsg.credentials.split(','))
+            this.AssessMsg.credentials = this.AssessMsg.credentials.split(',')
         }
     },
     created () {
@@ -364,37 +356,27 @@ export default {
                 }
                 &-update {
                     display: flex;
-                    height: px2rem(20);
-                    div {
+                    height: 90px;
+                    span {
+                        display: inline-block;
                         border: 1px solid #DFE0E7;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
+                        text-align: center;
                         flex: 1;
-                        position: relative;
-                        input[type=file] {
-                            width: px2rem(20);
-                            position: absolute;
-                            opacity: 0;
-                        }
-                        button {
-                            background-color: #616789;
-                            border: none;
-                            color: #fff;
-                            font-size: px2rem(3.2);
-                            padding: px2rem(1) px2rem(3);
-                            border-radius: px2rem(1);
-                        }
-                        img {
-                            width: 80%;
-                            height: px2rem(10);
-                        }
+                        background-color: #616789;
+                        color: #ffffff;
+                        line-height: 90px;
                     }
-                }
-
-                .el-select {
-                    width: 95%;
-                    background-color: #fff!important;
+                    &-imglist {
+                        flex: 5;
+                        display: flex;
+                        align-items: center;
+                        img {
+                            width: 150px;
+                            height: 80px;
+                            margin: 0 10px;
+                        }
+                        border: 1px solid #E8EAEC;
+                    }
                 }
             }
 

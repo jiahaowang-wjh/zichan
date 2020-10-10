@@ -12,7 +12,7 @@
             <div><input type="text" v-model='PaymentMsg.CardNum' disabled='true'></div>
             <div><input type="text" v-model='PaymentMsg.AccountName' disabled='true'></div>
             <div><input type="text" v-model='PaymentMsg.OpeningBank' disabled='true'></div>
-            <div><input type="text" v-model='PaymentMsg.FeePayable' disabled='true'></div>
+            <div><input type="text" :value="'应缴费用：' + PaymentMsg.FeePayable +'元' " disabled='true'></div>
             <div class='payment-civil-content-update'>
                 凭证信息：
                 <div class='payment-civil-content-update-box'>
@@ -51,7 +51,7 @@ export default {
                 CardNum: '收款卡号：745868704479',
                 AccountName: '开户名：深圳市金隆盛投资管理有限公司',
                 OpeningBank: '开户行：中国银行股份有限公司深圳南油支行',
-                FeePayable: '应缴费用：=解债金额×10%或者解债金额×13%',
+                FeePayable: this.$route.query.cost,
                 Contractor: ''
             },
             SubmitApproveData: {

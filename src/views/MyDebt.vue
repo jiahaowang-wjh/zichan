@@ -72,6 +72,8 @@
           <span>序号</span>
           <span>录入编号</span>
           <span>债权处理编号</span>
+          <span>债权人</span>
+          <span>债事人</span>
           <span>评估编号</span>
           <span>审批阶段</span>
           <span>创建时间</span>
@@ -87,8 +89,10 @@
             <span>{{ index + 1 }}</span>
             <span>{{ item.reportNo ? item.reportNo : "/" }}</span>
             <span>{{ item.debtNo ? item.debtNo : "/" }}</span>
+            <span>{{ item.debtName ? item.debtName : "/" }}</span>
+            <span>{{ item.personName ? item.personName : "/" }}</span>
             <span>{{ item.assessmentNo ? item.assessmentNo : "/" }}</span>
-            <span>{{ item.stage === "4" ? "资产阶段" : "/" }}</span>
+            <span>资产阶段</span>
             <span>{{ item.createTime ? item.createTime : "/" }}</span>
             <div>
               <span
@@ -164,8 +168,8 @@
               <button v-show="item.status === '2' || item.status === '4'">
                 查看
               </button>
-              <button v-show=" (item.stage === '4' && item.status === '1') || item.status === '4' || item.status === '7'"> 编辑</button>
-              <button @click="dialogTableVisible = true" v-show="item.status === '5'">
+              <button v-show="item.status === '2' || item.status === '5' || item.status === '7'"> 编辑</button>
+              <button class='download' type="button" @click="DownloadDocumnet(item)">
                 下载
               </button>
             </span>
@@ -184,13 +188,15 @@
     </div>
     <div class="my-debt-pop-download">
       <el-dialog title="下载" :visible.sync="dialogTableVisible">
-        <el-table :data="gridData">
-          <el-table-column property="Order" label="序号"></el-table-column>
-          <el-table-column property="WordName" label="文件名"></el-table-column>
-          <el-table-column property="WordType" label="类型"></el-table-column>
+        <el-table :data="gridData" stripe>
+          <el-table-column type='index' property="Order" label="序号"></el-table-column>
+          <el-table-column property="docName" label="文件名"></el-table-column>
+          <el-table-column property="docType" label="类型"></el-table-column>
           <el-table-column width="247" label="操作">
-            <button>查看</button>
-            <button>下载</button>
+            <template slot-scope="scope">
+                <el-button>查看</el-button>
+                <el-button @click="Download(scope.$index, scope.row)">下载</el-button>
+            </template>
           </el-table-column>
         </el-table>
       </el-dialog>
@@ -343,7 +349,7 @@ export default {
     },
     // 资产评估
     GoAssess(index,item) {
-      this.$router.push({path: '/Assess', query: {propertId: item.propertId, relativePerId: item.relativePerId}})
+      this.$router.push({path: '/Assess', query: {propertId: item.propertId, relativePerId: item.relativePerId, debtType: item.debtType}})
     },
     // <!-- 进入录入合同---2.债权转让协议 -->
     EnterContract(index, item) {
@@ -394,6 +400,38 @@ export default {
       console.log(result.data.data);
       this.MyDebtMsg = result.data.data.list;
     },
+    async DownloadDocumnet (item) {
+        console.log(item.reportId)
+        const formData = new FormData()
+        formData.append('reportId', item.reportId)
+        formData.append('docType', '2')
+        const { data: result } = await this.$http({
+            method: 'post',
+            data: formData,
+            url: '/api/api/pubDocController/queryDoc',
+        })
+        this.gridData = result.data
+        this.dialogTableVisible = true
+    },
+    async Download (index, row) {
+        console.log(row.docId)
+        const formData = new FormData()
+        formData.append('docId', row.docId)
+        const { data: result } = await this.$http({
+            method: 'post',
+            data: formData,
+            url: '/api/api/BusElectron/getBusElectronDoc',
+        })
+        let aLink = document.createElement("a")
+        aLink.style.display = "none"
+        aLink.href = result.data
+        aLink.setAttribute("download", row.docName)
+        document.body.appendChild(aLink)
+        aLink.click()
+        document.body.removeChild(aLink)
+        window.URL.revokeObjectURL(row.docPath)
+        this.$message.success('下载中')
+    }
   },
   created() {
     this.searchTbaleData();
@@ -541,8 +579,11 @@ export default {
         :nth-child(1) {
           flex: 1;
         }
-        :nth-child(6) {
-          flex: 2.5;
+        :nth-child(4),:nth-child(5),:nth-child(8) {
+            flex: 2.5;
+        }
+        :nth-child(9) {
+            flex: 3;
         }
       }
 
@@ -568,10 +609,10 @@ export default {
           :nth-child(1) {
             flex: 1;
           }
-          :nth-child(6) {
+          :nth-child(4),:nth-child(5),:nth-child(8) {
             flex: 2.5;
           }
-          :nth-child(7) {
+          :nth-child(9) {
             flex: 3;
             display: flex;
             justify-content: center;
@@ -617,6 +658,9 @@ export default {
             :nth-child(7) {
               background-color: #fc7f89;
             }
+            .download {
+                background-color: #B3BCF2;
+            }
           }
         }
         div:nth-child(even) {
@@ -636,21 +680,15 @@ export default {
           :nth-child(1) {
             flex: 1;
           }
-          :nth-child(6) {
+          :nth-child(4),:nth-child(5),:nth-child(8) {
             flex: 2.5;
           }
-          :nth-child(7) {
-            flex: 3;
-            background-color: #e0e3f8;
-            span {
-              text-align: center;
-            }
-          }
-          :nth-child(7) {
+          :nth-child(9) {
             flex: 3;
             display: flex;
             justify-content: center;
             align-items: center;
+            background-color: #e0e3f8;
             span {
               margin: 0 px2rem(3);
               height: px2rem(3);
@@ -691,6 +729,9 @@ export default {
             :nth-child(6),
             :nth-child(7) {
               background-color: #fc7f89;
+            }
+            .download {
+                background-color: #B3BCF2;
             }
           }
         }

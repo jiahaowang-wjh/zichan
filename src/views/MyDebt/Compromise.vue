@@ -135,6 +135,38 @@
                 </div>
             </div>
         </div>
+        <div class="compromise-pop" v-if="IsShowPopPage">
+            <div class="compromise-pop-box">
+                <div class="compromise-pop-box-header">
+                    <span>提示</span>
+                    <img src="@imgs/other/error@2x.png" alt="" @click="ClosePopPage" />
+                </div>
+                <div class="compromise-pop-box-body">
+                    <div class='compromise-pop-box-body-user'>
+                        债务人：{{InitMsg.debtName}}</br>
+                        联系电话：{{DebtPhone}}
+                    </div>
+                    <div>
+                        <span>验证码：</span>
+                        <el-input v-model='PhoneCheck[0].checkNo'></el-input>
+                        <el-button size='mini' @click='GetDebtPhoneCheck'>点击获取</el-button>
+                    </div>
+                    <div class='compromise-pop-box-body-user'>
+                        债务人：{{InitMsg.personName}}</br>
+                        联系电话：{{PersonPhone}}
+                    </div>
+                    <div>
+                        <span>验证码：</span>
+                        <el-input v-model='PhoneCheck[1].checkNo'></el-input>
+                        <el-button size='mini' @click='GetRelativePhoneCheck'>点击获取</el-button>
+                    </div>
+                </div>
+                <div class="compromise-pop-box-footer">
+                    <el-button size='mini' type="button" @click="ClosePopPage">取消</el-button>
+                    <el-button size='mini' type="button" @click="SubmitAllData">确认</el-button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -149,7 +181,22 @@ export default {
                 comId: '',
                 contractDate: ''
             },
-            debtType: ''
+            debtType: '',
+            IsShowPopPage: false,
+            // 债权人债事人手机验证码
+            PhoneCheck: [
+                // 债权人
+                {
+                    checkNo: '',
+                    tel: ''
+                },
+                // 债事人
+                {
+                    checkNo: '',
+                    tel: ''
+                }
+            ],
+            HasCheckPhone: false
         }
     },
     methods: {
@@ -167,10 +214,42 @@ export default {
                 }
             })
             this.InitMsg = result.data
-            console.log(this.InitMsg)
             this.debtType = this.$route.query.debtType
         },
-        async Submit () {
+        Submit () {
+            this.IsShowPopPage = true
+        },
+        async SubmitAllData () {
+            // 先进行短信验证码验证
+            // 债权人手机验证
+            const CreditorPhoneCheckFormData = new FormData()
+            for (const key in this.PhoneCheck[0]) {
+                CreditorPhoneCheckFormData.append(key, this.PhoneCheck[0][key])
+            }
+            const { data: CreditorPhoneCheckResult } = await this.$http({
+                method: 'post',
+                url: '/api/api/smsSend/checkNO',
+                data: CreditorPhoneCheckFormData,
+                headers: {
+                'Content-Type': 'multipart/form-data'
+                }
+            })
+            if (CreditorPhoneCheckResult.resultCode !== '200') return this.$message.error('债权人短信验证码输入错误,请重新输入')
+            // 债务人手机验证
+            const DebtorPhoneCheckFormData = new FormData()
+            for (const key in this.PhoneCheck[1]) {
+                DebtorPhoneCheckFormData.append(key, this.PhoneCheck[1][key])
+            }
+            const { data: DebtorPhoneCheckResult } = await this.$http({
+                method: 'post',
+                url: '/api/api/smsSend/checkNO',
+                data: DebtorPhoneCheckFormData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            })
+            if (DebtorPhoneCheckResult.resultCode !== '200') return this.$message.error('债务人短信验证码输入错误,请重新输入')
+            // 数据提交
             this.SubmitData.comId = window.sessionStorage.getItem('companyId')
             this.SubmitData.contractDate = this.InitMsg.contractDate
             this.SubmitData.compromiseAgreementNo = this.InitMsg.compromiseAgreementNo
@@ -215,11 +294,64 @@ export default {
             if (StatusResult.resultCode !== '200') return this.$message.error('修改资产状态失败, 请重试')
             this.$message.success('提交成功')
             this.$router.push({path: '/MyDebt'})
+        },
+        ClosePopPage () {
+            this.IsShowPopPage = false
+        },
+        async GetDebtPhoneCheck () {
+            this.PhoneCheck[0].tel = this.DebtPhone
+            const formData = new FormData()
+            formData.append('tel', this.PhoneCheck[0].tel)
+            await this.$http({
+                method: 'post',
+                url: '/api/api/smsSend/sendCheckNO',
+                data: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            this.$message({
+                message: '手机验证码发送成功, 请填写正确的验证码',
+                type: 'success',
+            })
+        },
+        async GetRelativePhoneCheck () {
+            this.PhoneCheck[1].tel = this.PersonPhone
+            const formData = new FormData()
+            formData.append('tel', this.PhoneCheck[1].tel)
+            await this.$http({
+                method: 'post',
+                url: '/api/api/smsSend/sendCheckNO',
+                data: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            this.$message({
+                message: '手机验证码发送成功, 请填写正确的验证码',
+                type: 'success',
+            })
         }
     },
     created () {
         this.InitData()
-    }
+    },
+    computed: {
+        DebtPhone: function () {
+            if(this.InitMsg.debtReportPropert === '1') {
+                return this.InitMsg.priDebtPhone
+            } else {
+                return this.InitMsg.corBackDebtPhone
+            }
+        },
+        PersonPhone: function () {
+            if(this.InitMsg.personReportPropert === '1') {
+                return this.InitMsg.personPriPhone
+            } else {
+                return this.InitMsg.personCorPhone
+            }
+        }
+    },
 }
 
 </script>
@@ -260,6 +392,7 @@ export default {
     background-color: #E9F0F5;
     height: 100%;
     width: 100%;
+    position: relative;
     &-title {
         height: px2rem(12);
         line-height: px2rem(12);
@@ -430,6 +563,77 @@ export default {
                     box-sizing: border-box;
                     text-align: right;
                     padding-right: px2rem(25)
+                }
+            }
+        }
+    }
+    &-pop {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        &-box {
+            position: absolute;
+            background-color: #ffffff;
+            width: px2rem(100);
+            left: 45%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: px2rem(2);
+            font-size: px2rem(3.5);
+            &-header {
+                    height: px2rem(10);
+                    background-color: #616789;
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: px2rem(3.5);
+                    align-items: center;
+                    padding: 0 px2rem(4);
+                    box-sizing: border-box;
+                    color: #fff;
+                img {
+                    width: px2rem(3);
+                    height: px2rem(3);
+                }
+            }
+            &-body {
+                margin: 20px;
+                display: flex;
+                flex-direction: column;
+                font-size: px2rem(3.5);
+                .el-input {
+                    border: 1px solid #e8eaec;
+                    height: px2rem(8);
+                    line-height: px2rem(8);
+                    margin: px2rem(3) 0;
+                }
+                span {
+                    flex-shrink: 0;
+                }
+                .el-button {
+                    flex-shrink: 0;
+                    margin-left: 10px;
+                    background-color: #616789;
+                    color: #fff;
+                }
+            }
+            &-footer {
+                display: flex;
+                justify-content: space-around;
+                margin: px2rem(6) 0;
+                button {
+                    padding: px2rem(1) px2rem(4);
+                    border: 1px solid #616789;
+                    border-radius: px2rem(1);
+                }
+                button:nth-child(1) {
+                    color: #616789;
+                    background-color: #fff;
+                }
+                :nth-child(2) {
+                    color: #ffffff;
+                    background-color: #616789;
                 }
             }
         }

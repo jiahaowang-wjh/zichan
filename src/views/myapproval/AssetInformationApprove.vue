@@ -988,7 +988,6 @@ export default {
                 'Content-Type': 'multipart/form-data',
                 }
             })
-            console.log(this.DebtType)
             if (this.DebtType !== '1') {
                 if (this.DebtType === '2') {
                     // 委托代理销售合同转pdf保存+盖章
@@ -1012,6 +1011,7 @@ export default {
                     })
                 }
             }
+            this.$router.push({path: '/AssetInformation'})
         },
         // 提交审批状态
         async UpdateCheckStatus (status) {
