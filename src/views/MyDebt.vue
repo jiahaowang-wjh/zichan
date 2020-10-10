@@ -169,7 +169,7 @@
                 查看
               </button>
               <button v-show=" (item.stage === '4' && item.status === '1') || item.status === '4' || item.status === '7' && roleId === '7994113497085001728'" > 编辑</button>
-              <button @click="dialogTableVisible = true" v-show="item.status === '5'">
+              <button @click="DownloadDocumnet(item)">
                 下载
               </button>
             </span>
@@ -284,56 +284,6 @@ export default {
       },
       // 下载弹出窗的数据源
       gridData: [
-        {
-          Order: "1",
-          WordName: "《债务人基本信息登记表》",
-          WordType: "word",
-        },
-        {
-          Order: "2",
-          WordName: "《附件》",
-          WordType: "excel",
-        },
-        {
-          Order: "3",
-          WordName: "《债务人身份证正面附件》",
-          WordType: "mp3",
-        },
-        {
-          Order: "4",
-          WordName: "《债务人身份证反面附件》",
-          WordType: "mp3",
-        },
-        {
-          Order: "5",
-          WordName: "王小虎",
-          WordType: "mp3",
-        },
-        {
-          Order: "6",
-          WordName: "王小虎",
-          WordType: "mp3",
-        },
-        {
-          Order: "7",
-          WordName: "王小虎",
-          WordType: "mp3",
-        },
-        {
-          Order: "8",
-          WordName: "王小虎",
-          WordType: "mp3",
-        },
-        {
-          Order: "9",
-          WordName: "王小虎",
-          WordType: "mp3",
-        },
-        {
-          Order: "10",
-          WordName: "王小虎",
-          WordType: "mp3",
-        },
       ],
       dialogTableVisible: false,
     };
