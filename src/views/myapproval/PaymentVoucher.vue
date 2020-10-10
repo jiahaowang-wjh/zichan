@@ -48,7 +48,8 @@
                     </span>
                     <span>{{item.status === '0' ? '缴费信息未审核' : item.status === '1' ? '缴费信息审核未通过' : item.status === '2' ? '缴费审核通过' : '' }}</span>
                     <span>
-                        <button @click='PaymentCheck(index, item)' v-show="item.status === '0' && item.payType === '4'">缴费审核</button>
+                       
+                        <button @click='PaymentCheck(index, item)' v-show="item.status === '0'&& item.payType === '4' && roleId === '7994113414473990144'">缴费审核</button>
                     </span>
                 </div>
             </div>
@@ -83,6 +84,7 @@ export default {
             ],
             // 支付信息信息列表数据源
             PaymentMsg: [],
+            roleId: window.sessionStorage.getItem('roleId'),
             // 确定选用正常模板还是多选模板
             isNormal: false,
             TimeSelect: {
