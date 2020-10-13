@@ -624,7 +624,7 @@
                             </div>
                             <div class='compromise-content-main-text'>
                                 合同编号：<el-input :disabled='true' type="text" :value='CompromiseInitMsg.compromiseAgreementNo' style='width: 300px'></el-input><br/>
-                                甲方：深圳金瑞盈通资产管理有限公司<br>
+                                甲方：深圳市金隆盛投资管理有限公司<br>
                             </div>
                             <div style='margin: 4px 0' class='compromise-content-main-form-top'>
                                 <span>
@@ -661,7 +661,7 @@
                                 <el-row :gutter="24">
                                     <el-col :span="6">
                                         <span class='col-label'>甲方：</span>
-                                        <el-input :disabled='true' type="text" :value="'深圳金瑞盈通资产管理有限公司'"></el-input>
+                                        <el-input :disabled='true' type="text" :value="'深圳市金隆盛投资管理有限公司'"></el-input>
                                     </el-col>
                                     <el-col :span="3">
                                         <span class='col-label'></span>

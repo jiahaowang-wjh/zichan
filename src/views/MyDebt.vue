@@ -312,11 +312,11 @@ export default {
     },
     // <!-- 重新进入---4.债权确认书 -->
     EnterDebtConfirm(index, item) {
-        this.$router.push({path: '/DebtConfirm', query: {propertId: item.propertId, relativePerId: item.relativePerId, debtType: this.debtType}})
+        this.$router.push({path: '/DebtConfirm', query: {propertId: item.propertId, relativePerId: item.relativePerId, debtType: item.debtType}})
     },
     // <!-- 重新进入---5.债权转让通知书 -->
     EnterNotification(index, item) {
-        this.$router.push({path: '/Notification', query: {propertId: item.propertId, relativePerId: item.relativePerId, debtType: this.debtType}})
+        this.$router.push({path: '/Notification', query: {propertId: item.propertId, relativePerId: item.relativePerId, debtType: item.debtType}})
     },
     // <!-- 重新进入---6.委托线上代理销售合同 -->
     EnterSalesAgreement(index, item) {

@@ -64,7 +64,7 @@
                     <input type="text" style='width: 330px'>
                 </div>
                 <div class='promise-content-main-text'>
-                    乙方：深圳金瑞盈通资产管理有限公司<br>
+                    乙方：深圳市金隆盛投资管理有限公司<br>
                     统一社会信用代码：91440300359331797F<br>
                     联系地址：深圳市光明新区公明街道公园路17栋306号房<br>
                     联系电话：18688724748<br>
