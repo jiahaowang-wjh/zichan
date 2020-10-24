@@ -97,7 +97,7 @@
                 <div class='assess-content-main-row2-update'>
                     <span class='assess-content-main-row2-update-title'>本次置换资产凭证</span>
                     <div class='assess-content-main-row2-update-imglist'>
-                        <img :src="item" v-for='(item,index) in SubmitData.credentials' :key='index' alt="">
+                        <img :src="item" v-for='(item,index) in SubmitData.credentials' :key='index' @click="openImgToLink(item)" alt="">
                     </div>
                     <div class='assess-content-main-row2-update-button'>
                         <el-button size='mini'>点击上传</el-button>
@@ -256,6 +256,9 @@ export default {
         padding: px2rem(4);
         border-radius: px2rem(2);
         position: relative;
+        input {
+            font-size: 16px;
+        }
         &-progress-map {
             display: flex;
             justify-content: space-around;
@@ -266,7 +269,7 @@ export default {
                 flex: 1;
                 flex-direction: column;
                 align-items: center;
-                font-size: px2rem(3.2);
+                font-size: 16px;
                 color: #DFE0E7;
                 span {
                     background-color: #DFE0E7;
@@ -295,7 +298,7 @@ export default {
         &-main {
             width: 98%;
             margin: 0 auto;
-            font-size: px2rem(3.2);
+            font-size: 16px;
             input {
                 padding-left: px2rem(2);
                 width: 95%;
@@ -387,7 +390,7 @@ export default {
                         display: flex;
                         align-items: center;
                         img {
-                            width: 150px;
+                            width: 110px;
                             height: 80px;
                             margin: 0 10px;
                         }
@@ -405,9 +408,11 @@ export default {
                             position: absolute;
                         }
                         .el-button {
-                            width: 100px;
+                            font-size: 16px;
+                            padding: 8px 24px;
                             background-color: #616789;
                             color: #fff;
+                            border-radius: 4px;
                         }
                     }
                 }
@@ -423,7 +428,7 @@ export default {
                     background-color: #616789;
                     border: none;
                     color: #ffffff;
-                    font-size: px2rem(3.5);
+                    font-size: 16px;
                     border-radius: px2rem(1);
                 }
             }

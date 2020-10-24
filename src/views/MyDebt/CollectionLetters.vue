@@ -250,6 +250,7 @@ export default {
                 button {
                     width: px2rem(50);
                     height: px2rem(8);
+                    font-size: 18px;
                     border: none;
                     background-color: #616789;
                     color: #fff;

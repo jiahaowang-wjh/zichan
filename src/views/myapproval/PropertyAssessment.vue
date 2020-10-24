@@ -122,6 +122,7 @@ export default {
                 }
             })
             this.PaymentMsg = result.data.list
+            console.log(this.PaymentMsg)
         },
         HandleSelect (item) {
             this.SelectOption.forEach(v => {

@@ -84,7 +84,7 @@
                 <div class='assess-content-main-row2-update'>
                     <span class='assess-content-main-row2-update-title'>本次置换资产凭证</span>
                     <div class='assess-content-main-row2-update-imglist'>
-                        <img :src="item" v-for='(item,index) in AssessMsg.credentials' :key='index' alt="">
+                        <img :src="item" v-for='(item,index) in AssessMsg.credentials' :key='index' alt="" @click="openImgToLink(item)">
                     </div>
                 </div>
                 <div class='assess-content-main-row2'>
@@ -109,8 +109,8 @@
                 <textarea maxlength='141' v-model='CommitApproveData.checkReason' ></textarea>
             </div>
             <div class='assess-check-button'>
-                <button @click='RejectCheck'>审核驳回</button>
-                <button @click='PassCheck'>审核通过</button>
+                <button @click.once='RejectCheck'>审核驳回</button>
+                <button @click.once='PassCheck'>审核通过</button>
             </div>
         </div>
     </div>
@@ -371,7 +371,7 @@ export default {
                         display: flex;
                         align-items: center;
                         img {
-                            width: 150px;
+                            width: 110px;
                             height: 80px;
                             margin: 0 10px;
                         }

@@ -14,10 +14,12 @@
             <div><input type="text" v-model='PaymentMsg.OpeningBank' disabled='true'></div>
             <div><input type="text" :value="'应缴费用：' + PaymentMsg.FeePayable +'元' " disabled='true'></div>
             <div class='payment-civil-content-update'>
-                凭证信息：
-                <div class='payment-civil-content-update-box'>
-                    <div class='payment-civil-content-update-box-container'>
-                        <img :src='item' alt="" v-for='item in InitMsg.voucher'>
+                上传凭证：
+                <div class="payment-civil-content-update-box">
+                    <div class="payment-civil-content-update-box-container">
+                        <div class='payment-civil-content-update-box-container-item' v-for="(item, index) in InitMsg.voucher" :key="index">
+                            <img :src="item" @click="openImgToLink(item)" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -63,6 +65,7 @@ export default {
             // 新增公章数据
             AddSealData: {
                 reportId: this.$route.query.reportId,
+                propertId: this.$route.query.propertId,
                 parta: '邓丽清',
                 partaCard: '440981198801011427',
                 partaTel: '15218801056'
@@ -212,7 +215,8 @@ export default {
         input {
             width: px2rem(115);
             padding-left: px2rem(5);
-            background: #F0F2FD;
+            font-size: 16px;
+            background-color: #E9F0F5;
             border: none;
             height: px2rem(10);
             line-height: px2rem(10);
@@ -223,46 +227,42 @@ export default {
             font-weight: 600;
         }
         &-update {
-            height: px2rem(16);
+        position: relative;
+        display: flex;
+        margin: px2rem(4) 0;
+        &-box {
+            margin: 10px 0;
             display: flex;
-            margin: px2rem(4) 0;
-            &-box {
-                width: px2rem(140);
-                height: px2rem(16);
-                border: 1px solid #E8EAEC;
-                margin: 0 px2rem(4);
+            height: 180px;
+            &-container {
+                width: 800px;
+                border: 1px solid #e8eaec;
                 display: flex;
-                align-items: center;
-
-                &-container {
-                    border: 1px solid #E8E8E8;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    margin: 0 px2rem(1);
-                    height: px2rem(10);
-                    width: px2rem(14);
+                flex-wrap: wrap;
+                margin: 0 10px;
+                &-item {
+                    position: relative;
                     img {
-                        width: px2rem(14);
-                        height: px2rem(8)
+                        margin: 0 px2rem(2);
+                        width: px2rem(18);
+                        height: px2rem(12.5);
+                    }
+                    &-delete{
+                        position: absolute;
+                        left: px2rem(15);
+                        top: px2rem(-2);
+                        width: 25px!important;
+                        height: 25px!important;
                     }
                 }
             }
-            &-button {
-                height: px2rem(9);
-                width: px2rem(25);
-                border: none;
-                background-color: #616789;
-                color: #fff;
-                border-radius: px2rem(2);
-            }
+        }
         }
         &-payer {
             margin-top: px2rem(2);
             input {
                 width: px2rem(80);
                 height: px2rem(8);
-                background-color: #fff;
                 border: 1px solid #E8EAEC;
             }
             input::-webkit-input-placeholder{

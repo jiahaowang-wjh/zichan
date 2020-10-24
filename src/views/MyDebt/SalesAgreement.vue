@@ -250,9 +250,6 @@
                         </el-col>
                     </el-row>
                 </div>
-                <div class='sales-agreement-content-main-button'>
-                    <button @click='Submit' :disabled='HasSubmitData'>提交</button>
-                </div>
                 <h3 style='margin-top: 120px'>附件一: 商品寄售清单</h3>
                 <!-- <div class='sales-agreement-content-main-list'>
                     <button>上传附件</button>
@@ -327,6 +324,9 @@
                         <el-button type="primary" size='mini'>上传电子章</el-button>
                     </el-col>
                 </el-row>
+                <div class='sales-agreement-content-main-button'>
+                    <button @click='Submit' :disabled='HasSubmitData'>提交</button>
+                </div>
             </div>
         </div>
     </div>
@@ -803,11 +803,12 @@ export default {
             }
             &-button {
                 text-align: center;
-                margin: px2rem(8) 0;
+                margin: 100px 0;
                 button {
                     width: px2rem(50);
                     height: px2rem(8);
                     border: none;
+                    font-size: 18px;
                     background-color: #616789;
                     color: #fff;
                     border-radius: px2rem(1);

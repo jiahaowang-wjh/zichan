@@ -645,7 +645,7 @@
                                 </el-select>
                                 项方式清偿债务：<br>
                                 （一）一次性现金还款：自双方签署本和解协议之日起30日内,乙方向甲方一次性支付现金人民币<el-input :disabled='true' type="text" v-model='CompromiseInitMsg.amountThis'></el-input>元。<br>
-                                （二）分期现金还款：采用分12期向甲方支付,每期支付人民币<el-input :disabled='true' type="text" v-model='CompromiseInitMsg.average'></el-input>元，每期还款日为每月<el-input :disabled='true' type="text" v-model='CompromiseInitMsg.day' style='width: 100px'></el-input>日。<br>
+                                （二）分期现金还款：采用分<el-input :disabled='true' type="text" v-model='CompromiseInitMsg.number' style='width: 100px'></el-input>期向甲方支付,每期支付人民币<el-input :disabled='true' type="text" v-model='CompromiseInitMsg.average'></el-input>元，每期还款日为每月<el-input :disabled='true' type="text" v-model='CompromiseInitMsg.day' style='width: 100px'></el-input>日。<br>
                                 （三）代物清偿：用与债务金额同等价值的货物进行清偿。<br>
                                 （四）其他偿还方式。<br>
                                 三、甲方指定如下银行账户为收款账户。<br>

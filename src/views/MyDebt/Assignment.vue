@@ -423,6 +423,7 @@ export default {
         height: px2rem(12);
         line-height: px2rem(12);
         color: #FC7F89;
+        font-size: 18px;
         margin: 0 px2rem(4);
         &-go1 {
             color: #616789;
@@ -488,6 +489,7 @@ export default {
                 line-height: px2rem(14);
                 text-align: center;
                 font-weight: 600;
+                font-size: 18px;
             }
             input {
                 background-color: #fff;

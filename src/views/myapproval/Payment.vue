@@ -15,13 +15,23 @@
             <div><input type="text" :value="'应缴费用：' + PamentMsg.FeePayable+'元'" disabled='true'></div>
             <div class='payment-info-content-update'>
                 上传凭证：
-                <div class='payment-info-content-update-box'>
+                <div class="payment-info-content-update-box">
                     <div class="payment-info-content-update-box-container">
-                        <img :src="item" v-for="(item,index) in SubmitData.voucher" :key="index" />
+                        <div class='payment-info-content-update-box-container-item' v-for="(item, index) in SubmitData.voucher" :key="index">
+                            <img :src="item" @click="openImgToLink(item)" />
+                            <img class='payment-info-content-update-box-container-item-delete' src="@imgs/other/delete.png" alt="" @click='DelectVocher(index)'>
+                        </div>
+                    </div>
+                    <div class='payment-info-content-update-button'>
+                        <button type="button"
+                        class="payment-info-content-update-button-form">
+                        点击上传
+                        </button>
+                        <input @change="UpdataVoucher"
+                            type="file"
+                            ref="Voucher" />
                     </div>
                 </div>
-                <button class="payment-info-content-update-button">点击上传</button>
-                <input @change="UpdataVoucher" type="file" ref="Voucher" />
             </div>
             <div class='payment-info-content-payer'>
                 合同人姓名：
@@ -107,12 +117,17 @@ export default {
             })
             if (StatusResult.resultCode !== '200') return this.$message.error('提交错误, 请重试')
             this.$message.success(StatusResult.resultMessage)
+            this.$router.push({path: '/AssetInformation'})
         },
         UpdataVoucher() {
             const file = this.$refs.Voucher.files[0]
             this.$UpdateFile(file).then((result) => {
                 this.SubmitData.voucher.push(result)
             })
+        },
+        // 删除凭证
+        DelectVocher (index) {
+            this.SubmitData.voucher.splice(index,1)
         }
     }
 }
@@ -153,6 +168,7 @@ export default {
         align-items: flex-start;
 
         input {
+            font-size: 16px;
             width: px2rem(115);
             padding-left: px2rem(5);
             background: #F0F2FD;
@@ -166,44 +182,55 @@ export default {
             font-weight: 600;
         }
         &-update {
-      position: relative;
-      height: px2rem(16);
-      display: flex;
-      margin: px2rem(4) 0;
-      &-box {
-        width: px2rem(140);
-        border: 1px solid #e8eaec;
-        margin: 0 px2rem(4);
-        display: flex;
-        align-items: center;
-
-        &-container {
-          margin: 0 px2rem(2);
-          height: px2rem(10);
-          img {
-            width: px2rem(16);
-            height: px2rem(10);
-            margin: 0 px2rem(1);
-            float: left
-          }
-        }
-      }
-      &-button {
-        height: px2rem(9);
-        width: px2rem(25);
-        border: none;
-        background-color: #616789;
-        color: #fff;
-        border-radius: px2rem(2);
-      }
-      input[type='file'] {
-        height: px2rem(9);
-        width: px2rem(20);
-        position: absolute;
-        left: px2rem(166);
-        bottom: px2rem(6);
-        opacity: 0;
-      }
+            position: relative;
+            display: flex;
+            margin: px2rem(4) 0;
+            &-box {
+                margin: 10px 0;
+                display: flex;
+                height: 180px;
+                &-container {
+                    width: 800px;
+                    border: 1px solid #e8eaec;
+                    display: flex;
+                    flex-wrap: wrap;
+                    margin: 0 10px;
+                    &-item {
+                        position: relative;
+                        img {
+                            margin: 0 px2rem(2);
+                            width: px2rem(18);
+                            height: px2rem(12.5);
+                        }
+                        &-delete{
+                            position: absolute;
+                            left: px2rem(15);
+                            top: px2rem(-2);
+                            width: 25px!important;
+                            height: 25px!important;
+                        }
+                    }
+                }
+            }
+            &-button {
+                position: relative;
+                &-form {
+                    padding: 10px 30px;
+                    font-size: 16px;
+                    border: none;
+                    background-color: #616789;
+                    color: #fff;
+                    border-radius: px2rem(2);
+                }
+                input[type='file'] {
+                    height: px2rem(9);
+                    width: px2rem(20);
+                    position: absolute;
+                    left: 0;
+                    top: -4px;
+                    opacity: 0;
+                }
+            }
         }
         &-payer {
             margin-top: px2rem(2);
