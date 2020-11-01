@@ -162,6 +162,10 @@ export default {
             }
             const flg = this.$route.query.flg
             if(flg === 'edit'){
+                formData.delete("checkDate")
+                formData.delete("createTime")
+                formData.delete("updateTime")
+                formData.delete("credentialsText")
                 console.log(formData)
                 const { data: result } = await this.$http({
                     method: 'post',
