@@ -28,8 +28,10 @@
                     <span>序号</span>
                     <span>录入编号</span>
                     <span>债权处理编号</span>
+                    <span>债权人</span>
+                    <span>债事人</span>
                     <span>评估编号</span>
-                    <span>审批阶段</span>
+                    <span>审批原因</span>
                     <span>创建时间</span>
                     <span>审批状态</span>
                     <span>操作</span>
@@ -39,8 +41,10 @@
                         <span>{{index+1}}</span>
                         <span>{{item.reportNo}}</span>
                         <span>{{item.debtNo}}</span>
+                        <span>{{ item.debtName ? item.debtName : "/" }}</span>
+                        <span>{{ item.personName ? item.personName : "/" }}</span>
                         <span>{{item.assessmentNo}}</span>
-                        <span>{{item.stage === '4'? '资产阶段': ''}}</span>
+                        <span>{{item.checkReason? item.checkReason: '/'}}</span>
                         <span>{{item.createTime}}</span>
                         <span :class="[item.status === '3' || item.status === '6' || item.status === '9'? ('pass') : item.status === '2' || item.status === '5' || item.status === '8'? 'unpass': 'hassubmit']">
                             {{item.status === '0'?('资产信息未录入'):item.status === '1'?('资产评估未审核'):item.status === '2'? ('资产评估审核未通过') : item.status === '3'?('资产评估审核通过') : item.status === '4'?('资产信息未审核') : item.status === '5'?('资产信息审核未通过') : item.status === '6'?('资产信息审核通过,开始缴费') : item.status === '7'?('财务信息未审核') : item.status === '8'?('财务信息审核未通过') : item.status === '9'?('财务信息审核通过') : '' }}
@@ -244,12 +248,26 @@ export default {
                 :nth-child(1) {
                     flex: 1;
                 }
+                :nth-child(4), :nth-child(5), :nth-child(8) {
+                    flex: 2.5;
+                }
             }
 
             &-tab {
                 display: flex;
                 flex-direction: column;
                 font-size: px2rem(3);
+                &-item {
+                    .pass {
+                        color: #17C67A !important
+                    }
+                    .unpass {
+                        color: #FF0000 !important
+                    }
+                    .hassubmit {
+                        color: #272A39 !important
+                    }
+                }
                 div:nth-child(odd) {
                     display: flex;
                     height: px2rem(10);
@@ -266,6 +284,9 @@ export default {
                     }
                     :nth-child(1) {
                         flex: 1;
+                    }
+                    :nth-child(4), :nth-child(5), :nth-child(8) {
+                        flex: 2.5;
                     }
                     :last-child {
                         button {
@@ -290,6 +311,9 @@ export default {
                     height: px2rem(10);
                     line-height: px2rem(10);
                     background-color: #E0E3F8;
+                    :nth-child(4), :nth-child(5), :nth-child(8) {
+                        flex: 2.5;
+                    }
                     span {
                         height: px2rem(10);
                         line-height: px2rem(10);

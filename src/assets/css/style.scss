@@ -44,7 +44,24 @@
     white-space: nowrap;
     display: inline-block;
 }
-
+.check-button {
+    background-color: #FC7F89;
+    font-size: 16px;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    color: #fff;
+    margin: 0 6px;
+}
+.edit-and-add-button {
+    background-color: #616789;
+    font-size: 16px;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    color: #fff;
+    margin: 0 6px;
+}
 // 提交按钮
 .page-commit {
     width: 90%;

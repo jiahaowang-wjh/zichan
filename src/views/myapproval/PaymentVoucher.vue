@@ -118,7 +118,7 @@ export default {
             },
             VoucherSearchSrc: {
                 pageNum: '1',
-                pageSize: '40',
+                pageSize: '10',
                 debtNo: '',
                 companyType: window.sessionStorage.getItem('companyType')
             }
@@ -141,7 +141,7 @@ export default {
             }
             const { data: result } = await this.$http({
                 method: 'post',
-                url: '/api/api/busPayDetailController/selectPayInfoList',
+                url: '/api/api/busPayDetailController/selectPayInfoListZc',
                 data: formData,
                 headers: {
                     'Content-Type': 'multipart/form-data'

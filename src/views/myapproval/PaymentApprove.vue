@@ -38,7 +38,7 @@
                 </div>
             <div class='payment-civil-check-button'>
                 <button @click='RejectCheck'>审核驳回</button>
-                <button @click='PassCheck'>审核通过</button>
+                <button @click.once='PassCheck'>审核通过</button>
             </div>
         </div>
         </div>
@@ -88,10 +88,11 @@ export default {
             this.InitMsg = result.data
             this.InitMsg.voucher = this.InitMsg.voucher.split(',')
         },
-        RejectCheck () {
+        async RejectCheck () {
             if (!this.SubmitApproveData.checkReason) return this.$message.error('请先填写审核原因')
-            this.UpdateCheckStatus('8')
-            this.UpdatePayStatus('1')
+            await this.UpdateCheckStatus('8')
+            await this.UpdatePayStatus('1')
+            await this.$router.push('PaymentVoucher')
         },
         async PassCheck () {
             await this.UpdateCheckStatus('9')

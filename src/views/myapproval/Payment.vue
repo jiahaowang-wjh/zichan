@@ -4,7 +4,7 @@
         <div class='payment-info-title'>
             <span class='payment-info-title-go1'>我的审批</span>
             <span class='payment-info-title-separator'> / </span>
-            <span class='payment-info-title-go2'>资产缴费</span>
+            <span class='payment-info-title-go2'>{{IsEditPage?'资产缴费编辑':'资产缴费'}}</span>
         </div>
         <div class='payment-info-content'>
             <div class='payment-info-content-title'>您提交的债权转让总部公司已经审核通过，请根据下面账户信息线下支付款项。</div>
@@ -40,7 +40,7 @@
             <div class='payment-info-content-payer'>打款人姓名：
                 <input type="text" placeholder="请输入" :disabled='HasSubmit' v-model='SubmitData.payertName'>
             </div>
-            <button class='payment-info-content-submit' @click='SubmitPayment'>提交</button>
+            <button class='payment-info-content-submit' @click.once='SubmitPayment'>提交</button>
         </div>
     </div>
 </template>
@@ -76,33 +76,50 @@ export default {
     methods: {
         async SubmitPayment () {
             // 获取相对人ID => 获取报备ID
-            const relativePerId = this.$route.query.relativePerId
-            const ReportFormData = new FormData()
-            ReportFormData.append('relativePerId', relativePerId)
-            const { data: ReportResult } = await this.$http({
-                method: 'post',
-                url: '/api/api/busRelativePersonController/selectByRelativePerId',
-                data: ReportFormData,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
+            if (this.IsEditPage) {
+                const EditFormData = new FormData()
+                this.$delete(this.SubmitData, 'debtId')
+                this.SubmitData.status = '0'
+                console.log(this.SubmitData)
+                for (const key in this.SubmitData) {
+                    EditFormData.append(key, this.SubmitData[key])
                 }
-            })
-            this.SubmitData.reportId = ReportResult.data.reportId
-            this.SubmitData.propertId = this.$route.query.propertId
-            // 提交缴费
-            const formData = new FormData()
-            for (const key in this.SubmitData) {
-                formData.append(key, this.SubmitData[key])
+                await this.$http({
+                    method: 'post',
+                    url: '/api/api/busPayDetailController/updateByPrimaryKeySelective',
+                    data: EditFormData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+            } else {
+                const relativePerId = this.$route.query.relativePerId
+                const ReportFormData = new FormData()
+                ReportFormData.append('relativePerId', relativePerId)
+                const { data: ReportResult } = await this.$http({
+                    method: 'post',
+                    url: '/api/api/busRelativePersonController/selectByRelativePerId',
+                    data: ReportFormData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                this.SubmitData.reportId = ReportResult.data.reportId
+                this.SubmitData.propertId = this.$route.query.propertId
+                // 提交缴费
+                const formData = new FormData()
+                for (const key in this.SubmitData) {
+                    formData.append(key, this.SubmitData[key])
+                }
+                await this.$http({
+                    method: 'post',
+                    url: '/api/api/busPayDetailController/insertSelective',
+                    data: formData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
             }
-            const { data: result } = await this.$http({
-                method: 'post',
-                url: '/api/api/busPayDetailController/insertSelective',
-                data: formData,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-            if (result.resultCode !== '200') return this.$message.error('提交错误, 请重试')
             // 调用状态改变接口
             const UpdateStatusFormData = new FormData()
             UpdateStatusFormData.append('propertId', this.SubmitData.propertId)
@@ -128,7 +145,40 @@ export default {
         // 删除凭证
         DelectVocher (index) {
             this.SubmitData.voucher.splice(index,1)
+        },
+        async InitData () {
+            if (this.IsEditPage) {
+                this.payId = this.$route.query.payId
+                const formData = new FormData()
+                formData.append('payId', this.payId)
+                const { data: result } = await this.$http({
+                    method: 'post',
+                    url: '/api/api/busPayDetailController/selectByPrimaryKey',
+                    data: formData,
+                    headers: {
+                    'Content-Type': 'multipart/form-data',
+                    },
+                })
+                // console.log(result.data)
+                // this.SubmitData = result.data
+                this.SubmitData = result.data
+                console.log(this.SubmitData)
+                this.SubmitData.voucher = this.SubmitData.voucher.split(',')
+                this.PamentMsg.FeePayable = this.SubmitData.cost
+            }
         }
+    },
+    computed: {
+        IsEditPage: function () {
+            if (this.$route.path === '/EditPayment') {
+                return true
+            } else {
+                return false
+            }
+        } 
+    },
+    created() {
+        this.InitData()
     }
 }
 

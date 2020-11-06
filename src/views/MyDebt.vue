@@ -527,10 +527,13 @@ export default {
           flex: 1;
         }
         :nth-child(4),:nth-child(5),:nth-child(8) {
-            flex: 2.5;
+            flex: 2;
         }
         :nth-child(9) {
             flex: 3;
+        }
+        :nth-child(10) {
+            flex: 4;
         }
       }
 
@@ -557,7 +560,7 @@ export default {
             flex: 1;
           }
           :nth-child(4),:nth-child(5),:nth-child(8) {
-            flex: 2.5;
+            flex: 2;
           }
           :nth-child(9) {
             flex: 3;
@@ -578,7 +581,7 @@ export default {
             }
           }
           :nth-child(10) {
-            flex: 3;
+            flex: 4;
             margin: 0 auto;
             button {
               font-size: 16px;
@@ -587,17 +590,11 @@ export default {
               border-radius: px2rem(1);
               margin: 0 px2rem(0.8);
               padding: px2rem(1.2) px2rem(3);
+              display: inline-block;
+              margin-left: 10px;
             }
             .edit-and-new {
               background-color: #616789;
-            }
-            :nth-child(4),
-            :nth-child(5) {
-              background-color: #b3bcf2;
-            }
-            :nth-child(6),
-            :nth-child(7) {
-              background-color: #fc7f89;
             }
             .download {
                 background-color: #B3BCF2;
@@ -622,7 +619,7 @@ export default {
             flex: 1;
           }
           :nth-child(4),:nth-child(5),:nth-child(8) {
-            flex: 2.5;
+            flex: 2;
           }
           :nth-child(9) {
             flex: 3;
@@ -646,30 +643,19 @@ export default {
             }
           }
           :last-child {
-            flex: 3;
+            flex: 4;
             margin: 0 auto;
             button {
               font-size: px2rem(3.5);
               color: #fff;
               border: none;
               border-radius: px2rem(1);
-              margin: 0 px2rem(0.8);
               padding: px2rem(1.5) px2rem(3);
+              display: inline-block;
+              margin-left: 10px;
             }
-            :nth-child(1),
-            :nth-child(2) {
+            .edit-and-new {
               background-color: #616789;
-            }
-            :nth-child(3) {
-              background-color: #616789;
-            }
-            :nth-child(4),
-            :nth-child(5) {
-              background-color: #b3bcf2;
-            }
-            :nth-child(6),
-            :nth-child(7) {
-              background-color: #fc7f89;
             }
             .download {
                 background-color: #B3BCF2;
