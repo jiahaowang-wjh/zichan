@@ -134,6 +134,9 @@ export default {
             SubmitData: {
                 propertId: '',
                 credentials: [],
+                assessmentDate:'',
+                assessmentId:'',
+                assessmentNo:'',
                 card: '',
                 companyManag: '',
                 status: '0'
@@ -157,16 +160,35 @@ export default {
             for (const key in this.SubmitData) {
                 formData.append(key, this.SubmitData[key])
             }
-            const { data: result } = await this.$http({
-                method: 'post',
-                url: '/api/api/busAssessmentController/insertSelective',
-                data: formData,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-            console.log('result', result)
-            if (result.resultCode !== '200') return this.$message.error('提交信息失败, 请重试')
+            const flg = this.$route.query.flg
+            if(flg === 'edit'){
+                formData.delete("checkDate")
+                formData.delete("createTime")
+                formData.delete("updateTime")
+                formData.delete("credentialsText")
+                console.log(formData)
+                const { data: result } = await this.$http({
+                    method: 'post',
+                    url: '/api/api/busAssessmentController/updateByPrimaryKeySelective',
+                    data: formData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                console.log('result', result)
+                if (result.resultCode !== '200') return this.$message.error('提交信息失败, 请重试')
+            }else{
+                const { data: result } = await this.$http({
+                    method: 'post',
+                    url: '/api/api/busAssessmentController/insertSelective',
+                    data: formData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                console.log('result', result)
+                if (result.resultCode !== '200') return this.$message.error('提交信息失败, 请重试')
+            }
             // 更新资产审批状态
             const StatusFormData = new FormData()
             StatusFormData.append('propertId', this.$route.query.propertId)
@@ -213,6 +235,23 @@ export default {
                 }
             })
             this.assessData = result.data
+            const flg = this.$route.query.flg
+            if(flg === 'edit'){
+                // 通过资产ID查询评估ID
+                const AssetInformationFormData = new FormData()
+                AssetInformationFormData.append('propertId', this.$route.query.propertId)
+                const { data: AssetInformationResult } = await this.$http({
+                    method: 'post',
+                    url: '/api/api/busAssessmentController/selectByPropertId',
+                    data: AssetInformationFormData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                this.SubmitData = AssetInformationResult.data
+                console.log(this.SubmitData)
+                this.SubmitData.credentials = this.SubmitData.credentials.split(',')
+            }
         },
         UpdataImgs () {
             const file = this.$refs.VoucherList.files[0]

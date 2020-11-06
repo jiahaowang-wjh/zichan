@@ -50,6 +50,12 @@
                             {{item.status === '0'?('资产信息未录入'):item.status === '1'?('资产评估未审核'):item.status === '2'? ('资产评估审核未通过') : item.status === '3'?('资产评估审核通过') : item.status === '4'?('资产信息未审核') : item.status === '5'?('资产信息审核未通过') : item.status === '6'?('资产信息审核通过,开始缴费') : item.status === '7'?('财务信息未审核') : item.status === '8'?('财务信息审核未通过') : item.status === '9'?('财务信息审核通过') : '' }}
                         </span>
                         <span>
+                                <button
+                                    v-show="item.status === '2' && roleId === '7994113497085001728'"
+                                    class='enter-and-edit'
+                                    @click="EditAssessData(index, item)">
+                            编辑资产评估信息
+                            </button>
                             <button @click="CheckAssessment(index, item)" v-show="item.status === '1' && roleId === '7994113384509882368'">审核</button>
                         </span>
                     </div>
@@ -136,6 +142,9 @@ export default {
         },
         CheckAssessment (index, item) {
             this.$router.push({path: '/AssessApprove', query: {propertId: item.propertId, relativePerId: item.relativePerId}})
+        },
+        EditAssessData (index, item) {
+            this.$router.push({path: '/Assess', query: {propertId: item.propertId, relativePerId: item.relativePerId, debtType: item.debtType,flg:'edit'}})
         }
     },
     created () {
