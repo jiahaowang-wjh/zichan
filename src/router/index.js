@@ -44,38 +44,22 @@ const routes = [
                 leftMenu: '/Password'
               }
             },
-             {
-              path: '/Assess',
-              name: 'Assess',
-              component: () => import('@/views/MyDebt/Assess'),
-              meta: {
-                leftMenu: '/Assess'
-              }
+            {
+            path: '/Assess',
+            name: 'Assess',
+            component: () => import('@/views/MyDebt/Assess'),
+            meta: {
+            leftMenu: '/Assess'
+            }
             },
-            //  {
-            //    path: '/DebtMessage',
-            //    name: 'DebtMessage',
-            //    component: () => import('@/views/DebtMessage'),
-            //    meta: {
-            //      leftMenu: '/DebtMessage'
-            //    }
-            //  },
-            //   {
-            //     path: '/FinanceMessage',
-            //     name: 'FinanceMessage',
-            //     component: () => import('@/views/FinanceMessage'),
-            //     meta: {
-            //       leftMenu: '/FinanceMessage'
-            //     }
-            //   },
-               {
-                 path: '/Assignment',
-                 name: 'Assignment',
-                 component: () => import('@/views/MyDebt/Assignment'),
-                 meta: {
-                   leftMenu: '/Assignment'
-                }
-               },
+            {
+                path: '/Assignment',
+                name: 'Assignment',
+                component: () => import('@/views/MyDebt/Assignment'),
+                meta: {
+                leftMenu: '/Assignment'
+            }
+            },
                 {
               path: '/ConfirmAssignment',
               name: 'ConfirmAssignment',
@@ -116,14 +100,6 @@ const routes = [
                   leftMenu: '/Guarantee'
                 }
               },
-               {
-                 path: '/ReportInfo',
-                 name: 'ReportInfo',
-                 component: () => import('@/views/myapproval/ReportInfo'),
-                 meta: {
-                   leftMenu: '/ReportInfo'
-                 }
-               },
                  {
                  path: '/DebtConfirm',
                  name: 'DebtConfirm',
@@ -139,15 +115,7 @@ const routes = [
                 meta: {
                   leftMenu: '/SalesAgreement'
                 }
-                }, 
-                {
-                 path: '/ReportInfo',
-                 name: 'ReportInfo',
-                 component: () => import('@/views/myapproval/ReportInfo'),
-                 meta: {
-                   leftMenu: '/ReportInfo'
-                 }
-               },
+                },
                {
                  path: '/CivilMedia',
                  name: 'CivilMedia',
@@ -212,7 +180,22 @@ const routes = [
                  meta: {
                    leftMenu: '/PaymentApprove'
                  }
-               }
+               },
+               , {
+                path: '/EditAssessment',
+                name: 'EditAssessment',
+                component: () => import('@/views/myapproval/AssetInformationApprove'),
+                meta: {
+                  leftMenu: '/AssetInformation'
+                }
+              }, {
+                path: '/EditPayment',
+                name: 'EditPayment',
+                component: () => import('@/views/myapproval/Payment'),
+                meta: {
+                  leftMenu: '/AssetInformation'
+                }
+              }
         ]
     }
 ]

@@ -4,8 +4,8 @@
         <div class='asset-information-approve-title'>
             <span class='asset-information-approve-title-go1'>我的审批</span>
             <span class='asset-information-approve-title-separator'> / </span>
-            <span class='asset-information-approve-title-go2'>资产资料信息审批</span>
-        </div>
+            <span class='asset-information-approve-title-go2'>{{IsEditPage? '资产资料信息编辑' : '资产资料信息审批'}}</span>
+        </div> 
         <div class='asset-information-approve-container'>
             <div class='asset-information-approve-container-form'>
                 <el-collapse>
@@ -549,41 +549,49 @@
                             <span>数量</span>
                             <span>合计（元）</span>
                             <span>备注</span>
+                            <span v-if='IsEditPage'>操作</span>
                         </div>
                         <div class='sales-agreement-content-main-list-1'>
-                            <div class='sales-agreement-content-main-list-1-item' v-for='(item,index) in SalesAgreementInitMsg.busAgentSalesContractModity || SalesAgreementInitMsg.busAgentSalesContractModities' :key='index'>
+                            <div class='sales-agreement-content-main-list-1-item' v-for='(item,Listindex) in SalesAgreementInitMsg.busAgentSalesContractModity || SalesAgreementInitMsg.busAgentSalesContractModities' :key='Listindex'>
                                 <span class='sales-agreement-content-main-list-1-item-1'>
-                                    <el-input :disabled='true' :value='index+1'></el-input>
+                                    <el-input :disabled='true' :value='Listindex+1'></el-input>
                                 </span>
                                 <!-- 商品名 -->
                                 <span class='sales-agreement-content-main-list-1-item-2'>
-                                    <el-input :disabled='true' :value='item.modityName'></el-input>
+                                    <!-- <el-input :disabled='!IsEditPage' :value='item.modityName'></el-input> -->
+                                    <el-select v-model='selectValue[Listindex]' @change="(val) => selectChange(item,Listindex)"value-key='modityName' :disabled='!IsEditPage'>
+                                            <el-option :label="OptionItem.modityName" :value='OptionItem' v-for='(OptionItem,OptionIndex) in GoodsMsg' :key='OptionItem.modityName'></el-option>
+                                    </el-select>
                                 </span>
                                 <!-- 型号 -->
                                 <span class='sales-agreement-content-main-list-1-item-3'>
-                                    <el-input :disabled='true' :value='item.moditySpecificat'></el-input>
+                                    <el-input :disabled='true' v-model='item.moditySpecificat'></el-input>
                                 </span>
                                 <!-- 计量单位 -->
                                 <span class='sales-agreement-content-main-list-1-item-3'>
-                                    <el-input :disabled='true' :value='item.partyaSeal'></el-input>
+                                    <el-input :disabled='true' v-model='item.partyaSeal'></el-input>
                                 </span>
                                 <!-- 单价（元） -->
                                 <span class='sales-agreement-content-main-list-1-item-3'>
-                                    <el-input :disabled='true' :value='item.moditySpecificat'></el-input>
+                                    <el-input :disabled='true' v-model='item.modityPlace'></el-input>
                                 </span>
                                 <!-- 数量 -->
                                 <span class='sales-agreement-content-main-list-1-item-3'>
-                                    <el-input :disabled='true' :value='item.partybSeal'></el-input>
+                                    <el-input :disabled='!IsEditPage' v-model='item.partybSeal'></el-input>
                                 </span>
                                 <!-- 合计（元） -->
                                 <span class='sales-agreement-content-main-list-1-item-3'>
-                                    <el-input :disabled='true' :value='item.moneyNum1'></el-input>  <!-- -->
+                                    <el-input :disabled='true' :value="Number(item.partybSeal) * (item.modityPlace) ? Number(item.partybSeal) * (item.modityPlace) : ''"></el-input>  <!-- -->
                                 </span>
                                 <!-- 备注 -->
                                 <span class='sales-agreement-content-main-list-1-item-4'>
-                                    <el-input :disabled='true' :value='item.partybTime'></el-input>
+                                    <el-input :disabled='!IsEditPage' v-model='item.partybTime'></el-input>
+                                </span>
+                                <span v-if='IsEditPage' class='sales-agreement-content-main-list-1-item-4'>
+                                    <button @click='DelecteItem(Listindex)'>删除</button>
                                 </span>
                             </div>
+                            <button v-if='IsEditPage' @click='AddItem()'>点击添加</button>
                         </div>
                         <el-row :gutter="24" style='margin-top: 50px'>
                             <el-col :span="8">
@@ -598,8 +606,8 @@
                             催款函
                         </div>
                         <div class='collection-letters-content-main-text'>
-                            致: <el-input :disabled='true' type="text" :value='CollectionLettersInitMsg.personName'></el-input><br>
-                            根据 债权转让方<el-input :disabled='true' type="text" :value='CollectionLettersInitMsg.debtName'></el-input>与我司签订的《债权转让协议》（编号：<el-input :disabled='true' type="text" :value='CollectionLettersInitMsg.assignmentAgreementNo' style='width: 300px'></el-input>）），债权转让方已依法将《借款合同》项下对贵方的所有权利转让给我司，包括但不限于本金、利息、罚息、复利、违约金及费用等。截止本催款函发出之日，我司依法对贵方享有到期债权共计人民币<el-input :disabled='true' type="text" :value='CollectionLettersInitMsg.amountThis'></el-input>元（大写： <el-input :disabled='true' type="text" :value='CollectionLettersInitMsg.moneyMax'></el-input>整），请贵方自收到本函之日起3日内将上述逾期未付的款项汇付至本公司指定账户：
+                            致: <el-input :disabled='true' type="text" :value='CollectionLettersInitMsg.personName' style='width: 300px'></el-input><br>
+                            根据 债权转让方<el-input :disabled='true' type="text" :value='CollectionLettersInitMsg.debtName' style='width: 300px'></el-input>与我司签订的《债权转让协议》（编号：<el-input :disabled='true' type="text" :value='CollectionLettersInitMsg.assignmentAgreementNo' style='width: 300px'></el-input>）），债权转让方已依法将《借款合同》项下对贵方的所有权利转让给我司，包括但不限于本金、利息、罚息、复利、违约金及费用等。截止本催款函发出之日，我司依法对贵方享有到期债权共计人民币<el-input :disabled='true' type="text" :value='CollectionLettersInitMsg.amountThis' style='width: 200px'></el-input>元（大写： <el-input :disabled='true' type="text" :value='CollectionLettersInitMsg.moneyMax' style="width: 300px"></el-input>整），请贵方自收到本函之日起3日内将上述逾期未付的款项汇付至本公司指定账户：
                         </div>
                         <div class='collection-letters-content-main-message'>
                             账  名：深圳市金隆盛投资管理有限公司<br/>
@@ -637,7 +645,7 @@
                                 原债权人 <el-input :disabled='true' type="text" :value='CompromiseInitMsg.debtName'></el-input>与甲方签订《债权转让协议》，将其对乙方享有的债权及全部相关权利和权益转让给甲方。现甲乙双方经友好协商，就乙方向甲方偿还债务事项达成一致意见，特签订本协议，以资共同遵守。</br>
                                 一、乙方应向甲方偿付的债务总金额为人民币 <el-input :disabled='true' type="text" :value='CompromiseInitMsg.amountThis'></el-input>元。<br>
                                 二、乙方按照如下第
-                                <el-select v-model="CompromiseInitMsg.partybMode" :disabled='true' placeholder="请选择">
+                                <el-select v-model="CompromiseInitMsg.partybMode" :disabled='!IsEditPage' placeholder="请选择">
                                     <el-option label="第1种: 一次性现金还款" :value="'1'"> </el-option>
                                     <el-option label="第2种: 分期现金还款" :value="'2'"> </el-option>
                                     <el-option label="第3种: 代物清偿" :value="'3'"> </el-option>
@@ -694,11 +702,14 @@
                                 </el-row>
                             </div>
                         </div>
+                        <div class='collection-letters-content-main-button'>
+                            <button @click.once='SubmitEditMsg'>提交</button>
+                        </div>
                     </el-collapse-item>
                 </el-collapse>
             </div>
         </div>
-        <div class='asset-information-approve-check'>
+        <div class='asset-information-approve-check' v-if='!IsEditPage'>
             <div class='asset-information-approve-check-reason'>
                 <span>审批原因</span>
                 <textarea maxlength='141' v-model='SubmitApproveData.checkReason'></textarea>
@@ -751,7 +762,13 @@ export default {
             // 和解协议
             CompromiseInitMsg: {},
             DebtType: this.$route.query.debtType,
-            IsInernet: false
+            // 计数用作用,给ID赋值
+            Num: 101,
+            // 记录当前index
+            Index: 0,
+            // 商品数据源
+            GoodsMsg: [],
+            selectValue: []
         }
     },
     methods: {
@@ -771,7 +788,6 @@ export default {
                 }
             })
             this.AssignmentInitMsg = result.data
-            console.log(this.AssignmentInitMsg)
         },
         // 转让确认
         async InitConfirmAssignment () {
@@ -820,17 +836,11 @@ export default {
                 }
             })
             this.NotificationInitMsg = result.data
-            console.log('this.NotificationInitMsg', this.NotificationInitMsg)
+            console.log(this.NotificationInitMsg)
         },
         // 销售合同
         async InitSalesAgreement () {
-            if (this.$route.query.debtType === '2') {
-                this.IsInernet = false
-            } else {
-                this.IsInernet = true
-            }
             const formData = new FormData()
-            formData.append('relativePerId', this.$route.query.relativePerId)
             formData.append('propertId', this.$route.query.propertId)
             formData.append('comId', window.sessionStorage.getItem('companyId'))
             if (!this.IsInernet) {
@@ -843,6 +853,7 @@ export default {
                     }
                 })
                 this.SalesAgreementInitMsg = result.data
+                this.selectValue = this.SalesAgreementInitMsg.busAgentSalesContractModity
             } else {
                 const { data: result } = await this.$http({
                     method: 'post',
@@ -853,7 +864,7 @@ export default {
                     }
                 })
                 this.SalesAgreementInitMsg = result.data
-                console.log(this.SalesAgreementInitMsg)
+                this.selectValue = this.SalesAgreementInitMsg.busAgentSalesContractModities
             }
         },
         // 催款函
@@ -902,8 +913,8 @@ export default {
                         'Content-Type': 'multipart/form-data'
                     }
                 }).then(PropertStatusResult => {
-                    if (PropertStatusResult.resultCode !== '200') return this.$message.error('更改资产阶段失败, 请重试')
-                    this.$message.success(PropertStatusResult.resultMessage)
+                    this.$message.success(PropertStatusResult.data.resultMessage)
+                    this.$router.push('AssetInformation')
                 })
             })
         },
@@ -1030,9 +1041,209 @@ export default {
                 }
             })
             this.$message.success(result.resultMessage)
+        },
+        async SubmitEditMsg () {
+            // 修改和解协议信息
+            const formData = new FormData()
+            formData.append('partybMode', this.CompromiseInitMsg.partybMode)
+            formData.append('propertId', this.$route.query.propertId)
+            const { data: result } = await this.$http({
+                method: 'post',
+                url: '/api/api/busCompromiseAgreementController/updatePartybMode',
+                data: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            // 更新销售合同
+            if(this.$route.query.debtType === '2') {
+                this.selectValue.map((v,index) => {
+                    this.$set(this.SalesAgreementInitMsg.busAgentSalesContractModity[index], 'moneyNum1', Number(this.selectValue[index].partybSeal) * Number(this.selectValue[index].modityPlace))
+                })
+                this.SalesAgreementInitMsg.busAgentSalesContractModity.map((v,i) => {
+                    for (const key in v) {
+                        this.$delete(this.SalesAgreementInitMsg.busAgentSalesContractModity[i], 'protocolId')
+                    }
+                })
+                let NullIndexs = []
+                this.SalesAgreementInitMsg.busAgentSalesContractModity.map((v, i) => {
+                    for (const key in v) {
+                        if (!v[key]) {
+                            NullIndexs.push(i)
+                            break
+                        }
+                    }
+                })
+                if (NullIndexs.length !== 0) {
+                    return this.$message.error('存在空白的商品信息, 请填写完全或删除该商品信息')
+                }
+                const UnlineFormData = new FormData()
+                const jsonData = JSON.stringify(this.SalesAgreementInitMsg)
+                UnlineFormData.append('jsonData', jsonData)
+                await this.$http({
+                    method: 'post',
+                    url: '/api/api/busAgentSalesContractController/updateByPrimaryKeySelective',
+                    data: UnlineFormData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+            } else if (this.$route.query.debtType === '3') {
+                // 如果为线上销售合同
+                this.selectValue.map((v,index) => {
+                    this.$set(this.SalesAgreementInitMsg.busAgentSalesContractModities[index], 'moneyNum1', Number(this.selectValue[index].partybSeal) * Number(this.selectValue[index].modityPlace))
+                })
+                this.SalesAgreementInitMsg.busAgentSalesContractModities.map((v,i) => {
+                    for (const key in v) {
+                        this.$delete(this.SalesAgreementInitMsg.busAgentSalesContractModities[i], 'salesContractId')
+                    }
+                })
+                let NullIndexs = []
+                this.SalesAgreementInitMsg.busAgentSalesContractModities.map((v, i) => {
+                    for (const key in v) {
+                        if (!v[key]) {
+                            NullIndexs.push(i)
+                            break
+                        }
+                    }
+                })
+                console.log(this.SalesAgreementInitMsg)
+                if (NullIndexs.length !== 0) {
+                    return this.$message.error('存在空白的商品信息, 请填写完全或删除该商品信息')
+                }
+                const InlineFormData = new FormData()
+                const InlineSubmitMsg = {
+                    propertId: this.SalesAgreementInitMsg.propertId,
+                    protocolNo: this.SalesAgreementInitMsg.protocolNo,
+                    contractDate: this.SalesAgreementInitMsg.contractDate,
+                    busAgentSalesContractModity: this.SalesAgreementInitMsg.busAgentSalesContractModities,
+                    protocolId: this.SalesAgreementInitMsg.protocolId
+                }
+                const jsonData = JSON.stringify(InlineSubmitMsg)
+                InlineFormData.append('jsonData', jsonData)
+                const {result : data } = await this.$http({
+                    method: 'post',
+                    url: '/api/api/cumoutProtocolController/updateByPrimaryKeySelective',
+                    data: InlineFormData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+            }
+            // 更新资产信息自身阶段
+            const PropertFormData = new FormData()
+            PropertFormData.append('propertId', this.$route.query.propertId)
+            PropertFormData.append('stage', '8')
+            await this.$http({
+                method: 'post',
+                url: '/api/api/busPropertController/updateStage',
+                data: PropertFormData,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            // 更新状态
+            const StatusformData = new FormData()
+            StatusformData.append('propertId', this.$route.query.propertId)
+            StatusformData.append('status', '4')
+            const { data: StatusResult } = await this.$http({
+                method: 'post',
+                url: '/api/api/busPropertController/updateStatus',
+                data: StatusformData,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            this.$message.success(StatusResult.resultMessage)
+            this.$router.push('AssetInformation')
+        },
+        // 新增商品
+        AddItem () {
+            if (this.SalesAgreementInitMsg.busAgentSalesContractModity) {
+                this.SalesAgreementInitMsg.busAgentSalesContractModity.push({
+                    id: this.Num,
+                    // 商品名称
+                    modityName: '',
+                    // 商品单价
+                    modityPlace: '',
+                    // 商品型号
+                    moditySpecificat: '',
+                    // 计量单位
+                    partyaSeal: '',
+                    // 合计金额
+                    partyaTime: '',
+                    // 商品数量
+                    partybSeal: '',
+                    // 商品备注
+                    partybTime: ''
+                })
+            } else {
+                this.SalesAgreementInitMsg.busAgentSalesContractModities.push({
+                    id: this.Num,
+                    // 商品名称
+                    modityName: '',
+                    // 商品单价
+                    modityPlace: '',
+                    // 商品型号
+                    moditySpecificat: '',
+                    // 计量单位
+                    partyaSeal: '',
+                    // 合计金额
+                    partyaTime: '',
+                    // 商品数量
+                    partybSeal: '',
+                    // 商品备注
+                    partybTime: ''
+                })
+            }
+            // 用作添加ID用
+            this.Num = this.Num + 1
+            // 记录当前Index用
+            this.Index = this.Index + 1
+        },
+        // 刪除商品
+        DelecteItem (Listindex) {
+            if (this.SalesAgreementInitMsg.busAgentSalesContractModity) {
+                this.SalesAgreementInitMsg.busAgentSalesContractModity.splice(Listindex, 1)
+            } else {
+                this.SalesAgreementInitMsg.busAgentSalesContractModities.splice(Listindex, 1)
+            }
+            this.Index = this.Index - 1
+        },
+        // 查询商品信息
+        async SearchGoodsMsg () {
+            const { data: result } = await this.$http({
+                method: 'post',
+                url: '/api/api/busAgentSalesContractModityController/queryComm',
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            this.GoodsMsg = result.data
+        },
+        selectChange (item, Listindex) {
+            console.log(Listindex)
+            // 型号赋值更改
+            if (this.SalesAgreementInitMsg.busAgentSalesContractModity) {
+                this.SalesAgreementInitMsg.busAgentSalesContractModity[Listindex].modityName = this.selectValue[Listindex].modityName
+                this.SalesAgreementInitMsg.busAgentSalesContractModity[Listindex].moditySpecificat = this.selectValue[Listindex].moditySpecificat
+                // 计量单位赋值更改
+                this.SalesAgreementInitMsg.busAgentSalesContractModity[Listindex].partyaSeal = this.selectValue[Listindex].partyaSeal
+                // 单价赋值更改
+                this.SalesAgreementInitMsg.busAgentSalesContractModity[Listindex].modityPlace = this.selectValue[Listindex].modityPlace
+            } else {
+                this.SalesAgreementInitMsg.busAgentSalesContractModities[Listindex].modityName = this.selectValue[Listindex].modityName
+                this.SalesAgreementInitMsg.busAgentSalesContractModities[Listindex].moditySpecificat = this.selectValue[Listindex].moditySpecificat
+                // 计量单位赋值更改
+                this.SalesAgreementInitMsg.busAgentSalesContractModities[Listindex].partyaSeal = this.selectValue[Listindex].partyaSeal
+                // 单价赋值更改
+                this.SalesAgreementInitMsg.busAgentSalesContractModities[Listindex].modityPlace = this.selectValue[Listindex].modityPlace
+            }
+            
         }
     },
     created () {
+        this.SearchGoodsMsg()
         this.InitAssignment()
         this.InitConfirmAssignment()
         this.InitDebtConfirm()
@@ -1127,6 +1338,22 @@ export default {
         },
         SaleEndTimeDay: function () {
             return (this.SalesAgreementInitMsg.endTime || '').split('-')[2]
+        },
+        // 判断当前是否为线上销售
+        IsInernet: function () {
+            if (this.$route.query.debtType === '3') {
+                return true
+            } else if (this.$route.query.debtType === '2') {
+                return false
+            }
+        },
+        // 判断当前是否为编辑頁面
+        IsEditPage: function () {
+            if (this.$route.path === '/EditAssessment') {
+                return true
+            } else {
+                return false
+            }
         }
     }
 }
@@ -2246,11 +2473,13 @@ export default {
             }
             &-button {
                 text-align: center;
-                margin: px2rem(10) 0;
+                margin-top: 100px;
+                margin-bottom: 60px;
                 button {
                     width: px2rem(50);
                     height: px2rem(8);
                     border: none;
+                    font-size: 18px;
                     background-color: #616789;
                     color: #fff;
                     border-radius: px2rem(1);
@@ -2365,15 +2594,6 @@ export default {
                     height: px2rem(4.5);
                     width: 200px;
                 }
-            }
-            input {
-                background-color: #fff;
-                border: 1px solid #DFE0E7;
-                border-radius: px2rem(1);
-                margin:0 px2rem(1);
-                background-color: #F2F6F9;
-                height: px2rem(4.5);
-                width: px2rem(30);
             }
             &-button {
                 text-align: center;
@@ -2526,85 +2746,6 @@ export default {
             }
             &-container {
                 margin-top: 100px;
-            }
-        }
-    }
-}
-.collection-letters {
-    display: flex;
-    flex-direction: column;
-    background-color: #E9F0F5;
-    height: 100%;
-    width: 100%;
-
-    &-content {
-        height: 100%;
-        background-color: #ffffff;
-        margin: 0 px2rem(4) px2rem(4) px2rem(4);
-        padding: px2rem(4);
-        border-radius: px2rem(2);
-        position: relative;
-        &-crossing {
-            z-index: 0;
-            position: absolute;
-            background-color: #DFE0E7;
-            height: 2px;
-            width: 97.7%;
-            top: px2rem(5.7);
-        }
-        &-main {
-            width: 100%;
-            font-size: px2rem(3.5);
-            &-title {
-                height: px2rem(14);
-                line-height: px2rem(14);
-                font-size: px2rem(4);
-                text-align: center;
-                font-weight: 600;
-            }
-            &-text {
-                line-height: px2rem(9);
-                .el-input {
-                    width: 200px;
-                }
-            }
-            &-button {
-                text-align: center;
-                margin: px2rem(10) 0;
-                button {
-                    width: px2rem(50);
-                    height: px2rem(8);
-                    border: none;
-                    background-color: #616789;
-                    color: #fff;
-                    border-radius: px2rem(1);
-                }
-            }
-            &-message {
-                margin: px2rem(6)  0;
-                line-height: px2rem(7);
-            }
-            &-container {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                button {
-                    background-color: #616789;
-                    color: #fff;
-                    padding: px2rem(1) px2rem(2);
-                    border: none;
-                    border-radius: px2rem(1);
-                }
-            }
-            &-name {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-end;
-                margin-right: 100px;
-                &-item {
-                    margin-top: 20px;
-                    margin-bottom: 60px;
-                }
             }
         }
     }
@@ -2845,7 +2986,7 @@ export default {
                             display: flex;
                             background-color: #FFFFFF;
                             .el-select {
-                                width: 90%;
+                                width: 100%;
                             }
                             el-input {
                                 text-align: center;

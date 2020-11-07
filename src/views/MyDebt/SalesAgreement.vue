@@ -342,8 +342,12 @@ export default {
                 propertId: this.$route.query.propertId,
                 // 代理销售合同ID
                 salesNo: '',
+                // 代理销售合同ID
+                protocolNo: '',
                 // 签约日期
-                contractDate: ''
+                contractDate: '',
+                // 商品信息
+                busAgentSalesContractModity:[]
             },
             // 商品信息列表
             GoodsMsgList: [
@@ -384,9 +388,9 @@ export default {
                 this.IsInernet = true
             }
             const formData = new FormData()
-            formData.append('relativePerId', this.$route.query.relativePerId)
             formData.append('propertId', this.$route.query.propertId)
             formData.append('comId', window.sessionStorage.getItem('companyId'))
+            console.log(!this.IsInernet)
             if (!this.IsInernet) {
                 const { data: result } = await this.$http({
                     method: 'post',
@@ -407,13 +411,13 @@ export default {
                     }
                 })
                 this.InitMsg = result.data
-                console.log(this.InitMsg)
             }
         },
         async Submit () {
             // 获取合计金额
             this.GoodsMsgList.map((v,index) => {
-                this.GoodsMsgList[index].moneyNum1 = Number(this.GoodsMsgList[index].partybSeal) * Number(this.GoodsMsgList[index].modityPlace)
+                // this.GoodsMsgList[index].partyaTime = Number(this.GoodsMsgList[index].partybSeal) * Number(this.GoodsMsgList[index].modityPlace)
+                this.$set(this.GoodsMsgList[index], 'moneyNum1', Number(this.GoodsMsgList[index].partybSeal) * Number(this.GoodsMsgList[index].modityPlace))
             })
             // 第一次过滤, 清除有空元素的行
             // 获取有空元素的下标数组
@@ -426,31 +430,21 @@ export default {
                     }
                 }
             })
-            if (NullIndexs !== []) {
-                NullIndexs.map(v => {
-                    this.GoodsMsgList = this.GoodsMsgList.filter((gvalue,gindex) => {
-                        return v !== gindex
-                    })
-                })
+            if (NullIndexs.length !== 0) {
+                return this.$message.error('存在空白的商品信息, 请填写完全或删除该商品信息')
             }
-            this.GoodsMsgList.map((v, i) => {
-                for (const key in v) {
-                    console.log(key,i)
-                    this.$set(this.SubmitData, `busAgentSalesContractModity[${i}].${key}`, v[key])
-                }
-            })
             this.SubmitData.contractDate  = this.InitMsg.contractDate
+            this.SubmitData.busAgentSalesContractModity  = this.GoodsMsgList
             const formData = new FormData()
-            for (const key in this.SubmitData) {
-                formData.append(key, this.SubmitData[key])
-            }
             if (this.$route.query.debtType === '2') {
                 this.SubmitData.salesNo = this.InitMsg.salesNo
+                const jsonData = JSON.stringify(this.SubmitData)
+                console.log(jsonData)
+                formData.append('jsonData', jsonData)
                 // 调用新增资产委托代理销售合同
-                console.log('11111')
                 await this.$http({
                     method: 'post',
-                    url: '/api/api/busAgentSalesContractController/insertSelective',
+                    url: '/api/api/busAgentSalesContractController/insertSelectiveJson',
                     data: formData,
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -458,19 +452,20 @@ export default {
                 })
             } else {
                 this.SubmitData.protocolNo = this.InitMsg.protocolNo
-                console.log(this.SubmitData)
+                const jsonData = JSON.stringify(this.SubmitData)
+                console.log(jsonData)
+                formData.append('jsonData', jsonData)
                 // 调用新增线上委托销售合同
-                console.log('22222')
                 await this.$http({
                     method: 'post',
-                    url: '/api/api/cumoutProtocolController/insertSelective',
+                    url: '/api/api/cumoutProtocolController/insertSelectiveJson',
                     data: formData,
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
                 })
             }
-            // // 更改报备状态
+            // // // 更改报备状态
             const PropertFormData = new FormData()
             PropertFormData.append('propertId', this.$route.query.propertId)
             PropertFormData.append('stage', '6')
@@ -500,7 +495,7 @@ export default {
                 // 计量单位
                 partyaSeal: '',
                 // 合计金额
-                partyaTime: '',
+                moneyNum1: '',
                 // 商品数量
                 partybSeal: '',
                 // 商品备注
@@ -650,7 +645,7 @@ export default {
                 flex: 1;
                 flex-direction: column;
                 align-items: center;
-                font-size: 12px;
+                font-size: px2rem(3.2);
                 color: #DFE0E7;
                 span {
                     background-color: #DFE0E7;
