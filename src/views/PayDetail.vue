@@ -15,11 +15,11 @@
                 <el-form ref="form">
                     <el-form-item>
                         <span>录入编号:</span>
-                        <el-input v-model='reportId'></el-input>
+                        <el-input v-model="tableQuery.debtNo"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
-            <div class='report-info-list-search-button' @click='SearchData'>搜索</div>
+            <div class='report-info-list-search-button' @click='IniVoucherApply()'>搜索</div>
         </div>
         <div class='report-info-list-content'>
             <!-- 正常显示模板 -->
@@ -42,9 +42,17 @@
                         <span>{{item.flag === '1' ? '报备阶段' : item.flag === '2' ? '调解阶段' : item.flag === '3' ? '置换阶段' : item.flag === '4' ? '资产阶段': ''}}</span>
                         <span>{{item.payId}}</span>
                         <span>{{item.cost}}</span>
-                        <span>{{item.voucher}}</span>
+                        <span><img :src="ImgItem" v-for='(ImgItem,Imgindex) in item.voucher' :key='Imgindex' alt=""></span>
                         <span>{{item.flag === '1' ? '报备阶段' : item.flag === '2' ? '调解阶段' : item.flag === '3' ? '置换阶段' : item.flag === '4' ? '资产阶段': ''}}</span>
                     </div>
+                </div>
+                <div style="text-align: right; margin-top: 25px">
+                    <el-pagination
+                    background
+                    @current-change="IniVoucherApply"
+                    layout="prev, pager, next"
+                    :total="tablePage.total"
+                    ></el-pagination>
                 </div>
             </template>
         </div>
@@ -56,10 +64,16 @@
 export default {
     data () {
         return {
-            // 分页器结构数据源
-            bgc: true,
-            queryInfo: {
-                pageSize: 10
+            //表格分页
+            tablePage: {
+                pageSize: 10,
+                pageNum: 1,
+                total: 0,
+            },//表格查询
+            tableQuery: {
+                debtNo: '',
+                companyType: window.sessionStorage.getItem('companyType'),
+                comId: window.sessionStorage.getItem('companyId'),
             },
             // 选项卡
             SelectOption: [
@@ -127,21 +141,31 @@ export default {
             })
             item.isSelect = true
         },
-        async SearchData () {
+        async IniVoucherApply (page){
+            this.tablePage.pageNum = page || 1
+            const queryData = Object.assign(this.tableQuery, this.tablePage)
             const formData = new FormData()
-            formData.append('reportId', this.reportId)
+            for (const key in queryData) {
+                formData.append(key, queryData[key])
+            }
             const { data: result } = await this.$http({
                 method: 'post',
-                url: '/api/api/busPayDetailController/selectByReportId',
+                url: '/api/api/busPayDetailController/selectPayInfoListZc',
                 data: formData,
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             })
-            console.log(result.data)
-            this.PaymentMsg = result.data
+            this.PaymentMsg = result.data.list
+            this.PaymentMsg.map(v => {
+                v.voucher = v.voucher.split(',')
+            })
+            this.tablePage.total = result.data.total
         }
-    }
+    },
+        created () {
+            this.IniVoucherApply()
+        }
 }
 
 </script>
@@ -310,6 +334,11 @@ export default {
                     }
                 }
             }
+            img {
+                    width: px2rem(12);
+                    height: px2rem(8);
+                    margin: 0 px2rem(1);
+                }
         }
     }
 }

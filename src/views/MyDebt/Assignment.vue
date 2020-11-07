@@ -181,7 +181,7 @@
                 <el-row :gutter="24" class='promise-content-main-container'>
                     <el-col :span="7">
                         <span class='col-label'>甲方：</span>
-                        <el-input type="text" :value='InitMsg.personName' :disabled='true'></el-input>
+                        <el-input type="text" :value='InitMsg.debtName' :disabled='true'></el-input>
                     </el-col>
                     <el-col :span="3">
                         <span class='col-label'></span>
