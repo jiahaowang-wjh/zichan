@@ -107,7 +107,10 @@ export default {
           method: "POST",
           url: "/api/authentication/form",
           data: QS.stringify(this.loginForm)
-        });
+        })
+        if (result.data.additionalInformation.userType === '1') {
+            return this.$message.error('请使用资产账号登录')
+        }
         if (result.resultCode !== "200") {
           // 重置表单
           this.ResetLoginForm();
