@@ -15,11 +15,11 @@
                 <el-form ref="form">
                     <el-form-item>
                         <span>录入编号：</span>
-                        <el-input></el-input>
+                        <el-input v-model="tableQuery.debtNo"></el-input>
                     </el-form-item>
                 </el-form>
             </div>
-            <div class='report-info-list-search-button'>搜索</div>
+            <div class='report-info-list-search-button' @click="IniVoucherApply()">搜索</div>
         </div>
         <div class='report-info-list-content'>
             <div class='report-info-list-content-title'>
@@ -53,6 +53,14 @@
                     </span>
                 </div>
             </div>
+            <div style="text-align: right; margin-top: 25px">
+                <el-pagination
+                background
+                @current-change="IniVoucherApply"
+                layout="prev, pager, next"
+                :total="tablePage.total"
+                ></el-pagination>
+            </div>
         </div>
       </div>
   </div>
@@ -81,7 +89,17 @@ export default {
                     SelectName: '审核驳回',
                     isSelect: false
                 }
-            ],
+            ],//表格分页
+            tablePage: {
+                pageSize: 10,
+                pageNum: 1,
+                total: 0,
+            },//表格查询
+            tableQuery: {
+                debtNo: '',
+                companyType: window.sessionStorage.getItem('companyType'),
+                comId: window.sessionStorage.getItem('companyId'),
+            },
             // 支付信息信息列表数据源
             PaymentMsg: [],
             roleId: window.sessionStorage.getItem('roleId'),
@@ -115,12 +133,6 @@ export default {
                         picker.$emit('pick', date)
                     }
                 }]
-            },
-            VoucherSearchSrc: {
-                pageNum: '1',
-                pageSize: '10',
-                debtNo: '',
-                companyType: window.sessionStorage.getItem('companyType')
             }
         }
     },
@@ -134,10 +146,12 @@ export default {
             })
             item.isSelect = true
         },
-        async IniVoucherApply () {
+        async IniVoucherApply (page) {
+            this.tablePage.pageNum = page || 1
+            const queryData = Object.assign(this.tableQuery, this.tablePage)
             const formData = new FormData()
-            for (const key in this.VoucherSearchSrc) {
-                formData.append(key, this.VoucherSearchSrc[key])
+            for (const key in queryData) {
+                formData.append(key, queryData[key])
             }
             const { data: result } = await this.$http({
                 method: 'post',
@@ -151,7 +165,7 @@ export default {
             this.PaymentMsg.map(v => {
                 v.voucher = v.voucher.split(',')
             })
-            console.log(this.PaymentMsg)
+            this.tablePage.total = result.data.total
         },
         CheckPayment (index) {
             if (this.PaymentMsg[index].stage === '1') {
