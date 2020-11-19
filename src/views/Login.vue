@@ -104,9 +104,9 @@ export default {
         // 如果验证不通过,直接return
         if (!valid) return this.$message.error("账号密码格式错误, 请重新输入",0);
         const { data: result } = await this.$http({
-          method: "POST",
-          url: "/api/authentication/form",
-          data: QS.stringify(this.loginForm)
+            method: "POST",
+            url: "/api/authentication/form",
+            data: QS.stringify(this.loginForm)
         })
         if (result.data.additionalInformation.userType === '1') {
             return this.$message.error('请使用资产账号登录')
